@@ -50,6 +50,8 @@ system("perl gatkBlock.pl") and warn "ERROR: $0: Cannot run test for gatkBlock.p
 system("perl picardtoolsBlock.pl") and warn "ERROR: $0: Cannot run test for picardtoolsBlock.pl  \n$!\n";
 system("perl samtoolsBlock.pl") and warn "ERROR: $0: Cannot run test for samtoolsBlock.pl  \n$!\n";
 system("perl checkFormatBlock.pl") and warn "ERROR: $0: Cannot run test for checkFormatBlock.pl  \n$!\n";
+system("perl fastqUtilsBlock.pl") and warn "ERROR: $0: Cannot run test for fastqUtilsBlock.pl  \n$!\n";
+
 
 
 

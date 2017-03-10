@@ -123,9 +123,9 @@ MANDATORY=reference
 #OUT=vcf
 #MANDATORY=reference
 
-#$checkEncodeByASCIIcontrol
-#IN=fastq
-#OUT=NA
+$checkEncodeByASCIIcontrol
+IN=fastq
+OUT=NA
 
 #$changeEncode
 #IN=fastq

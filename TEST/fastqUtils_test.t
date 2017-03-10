@@ -36,6 +36,7 @@ use warnings;
 use Data::Translate;#To convert ASCII to decimal
 use Data::Dumper;
 use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
+use Test::Deep;
 use lib qw(../Modules);
 use toolbox;
 

@@ -102,7 +102,9 @@ our %testParams=    (
         checkFormatFasta => [""],
         checkFormatFastq => [""],
         checkFormatVcf => [""],
-        checkFormatSamOrBam => [""]
+        checkFormatSamOrBam => [""],
+        #fastqUtils
+        checkEncodeByASCIIcontrol => [""]
         );
 
 sub softParams
