@@ -286,6 +286,8 @@ sub samToolsMerge
 sub samToolsIdxstats
 {
      my($bamFileIn,$idxstatsOutput)=@_;
+     ##DEBUG     toolbox::exportLog("WARN: samTools::samToolsIdxstats : $bamFileIn,$idxstatsOutput\n",2);
+     
      if (toolbox::sizeFile($bamFileIn)==1)                       ##Check if entry file exists and is not empty
      { 
           #Check if the format is correct
@@ -294,7 +296,9 @@ sub samToolsIdxstats
                toolbox::exportLog("ERROR: samTools::samToolsIdxstats : The file $bamFileIn is not a SAM/BAM file\n",0);
                return 0;
           }
-          my $command="$samtools idxstats $bamFileIn > $idxstatsOutput";#Command to be executed
+          my $command="$samtools index $bamFileIn && $samtools idxstats $bamFileIn > $idxstatsOutput";#Command to be executed
+          
+          ##DEBUG          toolbox::exportLog("WARN: samTools::samToolsIdxstats : $command\n",2);
           
           if(toolbox::run($command)==1)                          #Execute command
           {

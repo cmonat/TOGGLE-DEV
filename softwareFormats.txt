@@ -58,9 +58,9 @@ $samToolsMerge
 IN=bam
 OUT=bam
 
-#$samToolsIdxstat
-#IN=bam
-#OUT=NA
+$samToolsIdxstats
+IN=bam
+OUT=NA
 
 $samToolsDepth
 IN=bam
