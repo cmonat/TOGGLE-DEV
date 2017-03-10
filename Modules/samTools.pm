@@ -233,6 +233,9 @@ sub samToolsMerge
 {
 
      my($bamFiles,$bamOutFile,$header,$optionsHachees)=@_;
+     
+     ##DEBUG     toolbox::exportLog("Warning: $header",2);
+
     
      my $bamToMerge;                                                  # set of correct bam, ready for command launch
      foreach my $putativeBam (@{$bamFiles})
