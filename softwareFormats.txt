@@ -41,10 +41,10 @@ $samToolsView
 IN=sam,bam
 OUT=sam,bam
 
-#$samToolsFaidx
-#IN=fasta
-#OUT=NA
-#MANDATORY=reference
+$samToolsFaidx
+IN=fasta
+OUT=NA
+MANDATORY=reference
 
 $samToolsIndex
 IN=bam

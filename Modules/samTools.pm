@@ -47,12 +47,24 @@ use checkFormat;
 #Index reference sequence in the FASTA format or extract subsequence from indexed reference sequence.
 sub samToolsFaidx
 {
-     my($refFastaFileIn)=@_;
-     if (toolbox::sizeFile($refFastaFileIn)==1)
-     { ##Check if entry file exist and is not empty
+     my($fastaFileIn, $faidxFileOut, $optionsHachees)=@_;
+     
+     unless ($faidxFileOut) #only one variable, in toggleGenerator indexing steps
+     {
+          $faidxFileOut = "/dev/null";
+     }
+     
+     my $options="";
+          if ($optionsHachees)
+          {
+               $options=toolbox::extractOptions($optionsHachees); ##Get given options
+          }
+          
+     if (checkFormat::checkFormatFasta($fastaFileIn)==1)
+     { ##Check if entry file exists and is a fasta file
                     
           #Execute command
-          my $command=$samtools." faidx ".$refFastaFileIn;
+          my $command=$samtools." faidx ".$fastaFileIn." ".$options." > ".$faidxFileOut;
           if(toolbox::run($command)==1)
           {
                ##DEBUG toolbox::exportLog("INFOS: samTools::samToolsFaidx : Correctly done\n",1);
@@ -60,13 +72,13 @@ sub samToolsFaidx
           }
           else
           {
-               toolbox::exportLog("ERROR: samTools::samToolsFaidx : Uncorrecly done\n",0);
+               toolbox::exportLog("ERROR: samTools::samToolsFaidx : Uncorrectly done\n",0);
                return 0;#Error in command
           }
      }
      else
      {
-        toolbox::exportLog("ERROR: samTools::samToolsFaidx : The file $refFastaFileIn is incorrect;failed\n",0);
+        toolbox::exportLog("ERROR: samTools::samToolsFaidx : The file $fastaFileIn is incorrect;failed\n",0);
         return 0;#Error in the file itself
      }
 }
