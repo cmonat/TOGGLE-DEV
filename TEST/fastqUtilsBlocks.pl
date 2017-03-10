@@ -43,14 +43,14 @@ use fileConfigurator;
 
 # references files
 my $dataFastq33 = "../DATA/testData/fastq/pairedTwoIndividusIrigin/";
-my $dataFastq64 = "../DATA/testData/fastq/pairedOneIndividuArcad/";
+my $dataFastq64 = "../DATA/testData/fastq/singleIndividualPHRED64/";
 
 print "\n\n#################################################\n";
-print "#### TEST checkEncodeByASCIIcontrol\n";
+print "#### TEST checkEncodeByASCIIcontrol - PHRED+33\n";
 print "#################################################\n";
 
 # Remove files and directory created by previous test
-my $testingDir="../DATA-TEST/checkEncodeByASCIIcontrol";
+my $testingDir="../DATA-TEST/checkEncodeByASCIIcontrol33";
 my $cleaningCmd="rm -Rf $testingDir";
 system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
 
@@ -60,7 +60,7 @@ fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
 
 my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFastq33." -o ".$testingDir;
 print "\n### Toggle running : $runCmd\n";
-system("$runCmd") and warn "#### ERROR : Can't run TOGGLE for checkEncodeByASCIIcontrol";
+system("$runCmd") and warn "#### ERROR : Can't run TOGGLE for checkEncodeByASCIIcontrol33";
 
 # check final results
 print "\n### TEST Ouput list & content : $runCmd\n";
@@ -69,11 +69,42 @@ my @observedOutput = split /\n/,$observedOutput;
 my @expectedOutput = ('irigin1.checkEncodeByASCIIcontrol.log','irigin3.checkEncodeByASCIIcontrol.log');
 
 # expected output test
-is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - fastqUtils checkEncodeByASCIIcontrol list ');
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - fastqUtils checkEncodeByASCIIcontrol33 list ');
 
 # expected output content
-$observedOutput=`cat $testingDir/finalResults/irigin1.checkEncodeByASCIIcontrol.log`; 
+$observedOutput=`grep -c \"is encoded as a PHRED+33 file\" $testingDir/finalResults/irigin1.checkEncodeByASCIIcontrol.log`; 
 chomp $observedOutput;
-my $expectedOutput = "The FASTQ file /home/sabotf/Development/TOGGLE-DEV/DATA-TEST/checkEncodeByASCIIcontrol/output/irigin1/0_initialFiles/irigin1_1.fastq  is encoded as a PHRED+33 file
-The FASTQ file /home/sabotf/Development/TOGGLE-DEV/DATA-TEST/checkEncodeByASCIIcontrol/output/irigin1/0_initialFiles/irigin1_2.fastq  is encoded as a PHRED+33 file";
-is($observedOutput,$expectedOutput, 'toggleGenerator - fastqUtils checkEncodeByASCIIcontrol content ');
+my $expectedOutput = "2";
+is($observedOutput,$expectedOutput, 'toggleGenerator - fastqUtils checkEncodeByASCIIcontrol33 content ');
+
+print "\n\n#################################################\n";
+print "#### TEST checkEncodeByASCIIcontrol - PHRED+64+\n";
+print "#################################################\n";
+
+# Remove files and directory created by previous test
+$testingDir="../DATA-TEST/checkEncodeByASCIIcontrol64";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+@listSoft = ("checkEncodeByASCIIcontrol");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFastq64." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and warn "#### ERROR : Can't run TOGGLE for checkEncodeByASCIIcontrol64";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('RC1.checkEncodeByASCIIcontrol.log');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - fastqUtils checkEncodeByASCIIcontrol64 list ');
+
+# expected output content
+$observedOutput=`grep -c \"is not encoded as a PHRED+33 file\" $testingDir/finalResults/RC1.checkEncodeByASCIIcontrol.log`; 
+chomp $observedOutput;
+$expectedOutput = "1";
+is($observedOutput,$expectedOutput, 'toggleGenerator - fastqUtils checkEncodeByASCIIcontrol64 content ');
