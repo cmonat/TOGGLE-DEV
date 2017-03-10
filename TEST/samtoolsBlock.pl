@@ -117,3 +117,45 @@ is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) 
 $observedOutput=`wc -l $testingDir/finalResults/RC3-SAMTOOLSVIEW.SAMTOOLSMPILEUP.mpileup`; # We pick up only the position field
 chomp $observedOutput;
 is($observedOutput,"155888 ../DATA-TEST/samToolsMpileUp/finalResults/RC3-SAMTOOLSVIEW.SAMTOOLSMPILEUP.mpileup", 'toggleGenerator - One Bam (no SGE) MpileUp content ');
+
+#####################
+## TOGGLE samtools depth
+#####################
+
+#Input data
+my $dataMultipleBam = "../DATA/testData/samBam/twoBamsIrigin/";
+$dataRefIrigin = "../DATA/Bank/referenceIrigin.fasta";
+
+print "\n\n#################################################\n";
+print "#### TEST SAMtools depth\n";
+print "#################################################\n";
+
+# Remove files and directory created by previous test
+$testingDir="../DATA-TEST/samToolsDepth-Blocks";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+@listSoft = ("samToolsDepth");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataMultipleBam." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for samtools depth";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('irigin1-PICARDTOOLSMARKDUPLICATES.SAMTOOLSDEPTH.depth', 'irigin3-PICARDTOOLSMARKDUPLICATES.SAMTOOLSDEPTH.depth');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - samtools depth list ');
+
+# expected output content
+$observedOutput=`wc -l $testingDir/finalResults/irigin1-PICARDTOOLSMARKDUPLICATES.SAMTOOLSDEPTH.depth`; # We pick up only the position field
+chomp $observedOutput;
+@position = split /\s/, $observedOutput;
+$observedOutput= $position[0];
+is($observedOutput,"6172", 'toggleGenerator - samtools depth content ');
