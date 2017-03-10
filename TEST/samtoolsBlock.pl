@@ -203,7 +203,7 @@ $observedOutput= $position[0];
 is($observedOutput,"4964", 'toggleGenerator - samtools merge content ');
 
 #####################
-## TOGGLE samtools depth
+## TOGGLE samtools idxstats
 #####################
 
 #Input data
@@ -238,8 +238,55 @@ $observedOutput = `ls $testingDir/finalResults`;
 is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - samtools idxstats list ');
 
 # expected output content
-$observedOutput=`wc -l $testingDir/finalResults/irigin1-PICARDTOOLSMARKDUPLICATES.idxstats`; # We pick up only the position field
+$observedOutput=`wc -l $testingDir/finalResults/irigin1-PICARDTOOLSMARKDUPLICATES.idxstats`; 
 chomp $observedOutput;
 @position = split /\s/, $observedOutput;
 $observedOutput= $position[0];
 is($observedOutput,"952", 'toggleGenerator - samtools idxstats content ');
+
+
+#####################
+## TOGGLE samtools faidx
+#####################
+
+#Input data
+my $dataFasta = "../DATA/testData/fasta/TGICL/";
+$dataRefIrigin = "../DATA/Bank/referenceIrigin.fasta";
+
+print "\n\n#################################################\n";
+print "#### TEST SAMtools faidx\n";
+print "#################################################\n";
+
+# Remove files and directory created by previous test
+$testingDir="../DATA-TEST/samToolsFaidx-Blocks";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+@listSoft = ("samToolsFaidx");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+##Adding command to faidx fileConf
+#my $addCom = "echo \"\n\$samtoolsfaidx\n\TRINITY_DN75358_c0_g1_i1:1-100\n\" >> blockTestConfig.txt";
+#system($addCom);
+
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFasta." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for samtools faidx";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('contig.faidx.fasta');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - samtools faidx list ');
+
+# expected output content
+$observedOutput=`cat $testingDir/finalResults/contig.faidx.fasta`; 
+chomp $observedOutput;
+my $expectedOutput = ">TRINITY_DN75358_c0_g1_i1:1-100
+ATCACACGAACACATACGCTCTTCCTTTCTCTGAAATAAGAAGGAGGAGAAGAAGAAGGT
+CATGGGGTTCACAAAACTCGCCCTAGTTCTGGCAATAGCA";
+is($observedOutput,$expectedOutput, 'toggleGenerator - samtools faidx content ');

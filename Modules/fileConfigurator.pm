@@ -68,7 +68,7 @@ our %testParams=    (
         #SAMtools
         samToolsView => ["-h","-b","-f=0x02"],
         samToolsSort => [""],
-        samToolsFaidx => [""],
+        samToolsFaidx => ["TRINITY_DN75358_c0_g1_i1:1-100"],
         samToolsIndex => [""],
         mergeHeader => [""],
         samToolsMerge => [""],
