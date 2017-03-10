@@ -351,6 +351,7 @@ sub samToolsDepth
      }
      
      my $command = "$samtools depth $options $bamFilesToCompute > $depthOutputFile";#Command to be launched
+     ##DEBUG     toolbox::exportLog("WARN: command was \n\t$command\n",2);
      if(toolbox::run($command)==1)
      {
           return 1;#Command Ok

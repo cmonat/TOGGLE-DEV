@@ -62,9 +62,9 @@ OUT=NA
 #IN=bam
 #OUT=NA
 
-#$samToolsDepth
-#IN=bam
-#OUT=NA
+$samToolsDepth
+IN=bam
+OUT=NA
 
 $samToolsFlagstat
 IN=bam

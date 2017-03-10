@@ -242,7 +242,7 @@ my $listOfBam=();
 my ($vcfFileIn,$vcfFileOut)=("NA","NA");
 
 ##Intervals/Report associated variables
-my ($intervalsFile,$tableReport,$vcfSnpKnownFile);
+my ($intervalsFile,$tableReport,$vcfSnpKnownFile,$depthFileOut);
 
 ##MpileUp associated variables
 my ($mpileupOut);
