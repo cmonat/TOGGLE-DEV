@@ -225,6 +225,8 @@ $hashOrder = toolbox::rmHashOrder($hashOrder, "processRadtags");
 
 ##FASTA associated variables
 my $fastaFileIn="NA";
+my $faidxFileOut="NA";
+my $localFastaFileIn = "NA";
 
 ##FASTQ associated variables
 my ($fastqForwardIn, $fastqForwardOut, $fastqReverseIn, $fastqReverseOut)=("NA","NA","NA","NA");
@@ -242,7 +244,7 @@ my $listOfBam=();
 my ($vcfFileIn,$vcfFileOut)=("NA","NA");
 
 ##Intervals/Report associated variables
-my ($intervalsFile,$tableReport,$vcfSnpKnownFile);
+my ($intervalsFile,$tableReport,$vcfSnpKnownFile,$depthFileOut);
 
 ##MpileUp associated variables
 my ($mpileupOut);

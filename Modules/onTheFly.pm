@@ -324,7 +324,7 @@ sub indexCreator
                 else
                 {                
                     ##DEBUG print "samtools faidx\n";
-                    my $softParameters = toolbox::extractHashSoft($hashConf,"samToolsFaidx");# recovery of specific parameters of samToolsFaidx
+					my $softParameters = toolbox::extractHashSoft($hashConf,"samToolsFaidx");# recovery of specific parameters of samToolsFaidx
                     samTools::samToolsFaidx($reference);
                 }
             }

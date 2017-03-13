@@ -350,11 +350,14 @@ sub checkFormatFasta{
          else # The sequence is read
          {
              my $modifiedLine = $line;
+             #Normal IUPAC Code
              $modifiedLine =~ s/[A|T|G|C|a|g|t|c|N|n]//g;
+             #Degenerated IUPAC
+             $modifiedLine =~ s/[R|r|Y|y|S|s|W|w|K|k|M|m|B|b|D|d|H|h|V|v]//g;
              #DEBUG : print "\n**",$modifiedLine,"**\n";
              #DEBUG : exit;
              next if length($modifiedLine eq "");
-             $errors{$lineNumber} = "Not basic IUPAC letter, only ATGCNatgcn characters are allowed: unauthorized characters are $modifiedLine.";
+             $errors{$lineNumber} = "Not IUPAC letter, only ATGCNatgcn and RYSWKMBDHVryswkmbdhv characters are allowed: unauthorized characters are $modifiedLine.";
          }
  #Check if there are too much errors...
          if (scalar (keys %errors) > 19)

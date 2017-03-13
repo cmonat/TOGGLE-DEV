@@ -117,3 +117,176 @@ is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) 
 $observedOutput=`wc -l $testingDir/finalResults/RC3-SAMTOOLSVIEW.SAMTOOLSMPILEUP.mpileup`; # We pick up only the position field
 chomp $observedOutput;
 is($observedOutput,"155888 ../DATA-TEST/samToolsMpileUp/finalResults/RC3-SAMTOOLSVIEW.SAMTOOLSMPILEUP.mpileup", 'toggleGenerator - One Bam (no SGE) MpileUp content ');
+
+#####################
+## TOGGLE samtools depth
+#####################
+
+#Input data
+my $dataMultipleBam = "../DATA/testData/samBam/twoBamsIrigin/";
+$dataRefIrigin = "../DATA/Bank/referenceIrigin.fasta";
+
+print "\n\n#################################################\n";
+print "#### TEST SAMtools depth\n";
+print "#################################################\n";
+
+# Remove files and directory created by previous test
+$testingDir="../DATA-TEST/samToolsDepth-Blocks";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+@listSoft = ("samToolsDepth");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataMultipleBam." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for samtools depth";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('irigin1-PICARDTOOLSMARKDUPLICATES.SAMTOOLSDEPTH.depth', 'irigin3-PICARDTOOLSMARKDUPLICATES.SAMTOOLSDEPTH.depth');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - samtools depth list ');
+
+# expected output content
+$observedOutput=`wc -l $testingDir/finalResults/irigin1-PICARDTOOLSMARKDUPLICATES.SAMTOOLSDEPTH.depth`; # We pick up only the position field
+chomp $observedOutput;
+@position = split /\s/, $observedOutput;
+$observedOutput= $position[0];
+is($observedOutput,"6172", 'toggleGenerator - samtools depth content ');
+
+#####################
+## TOGGLE samtools merge
+#####################
+
+#Input data
+$dataMultipleBam = "../DATA/testData/samBam/twoBamsIrigin/";
+$dataRefIrigin = "../DATA/Bank/referenceIrigin.fasta";
+
+print "\n\n#################################################\n";
+print "#### TEST SAMtools merge\n";
+print "#################################################\n";
+
+# Remove files and directory created by previous test
+$testingDir="../DATA-TEST/samToolsMerge-Blocks";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+@listSoft = ("1000","samToolsMerge");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataMultipleBam." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for samtools merge";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('multipleAnalysis.SAMTOOLSMERGE.bam');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - samtools merge list ');
+
+# expected output content
+$observedOutput=`samtools view -h $testingDir/finalResults/multipleAnalysis.SAMTOOLSMERGE.bam | wc -l`; # We pick up only the position field
+chomp $observedOutput;
+@position = split /\s/, $observedOutput;
+$observedOutput= $position[0];
+is($observedOutput,"4964", 'toggleGenerator - samtools merge content ');
+
+#####################
+## TOGGLE samtools idxstats
+#####################
+
+#Input data
+$dataMultipleBam = "../DATA/testData/samBam/twoBamsIrigin/";
+$dataRefIrigin = "../DATA/Bank/referenceIrigin.fasta";
+
+print "\n\n#################################################\n";
+print "#### TEST SAMtools idxstats\n";
+print "#################################################\n";
+
+# Remove files and directory created by previous test
+$testingDir="../DATA-TEST/samToolsIdxstats-Blocks";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+@listSoft = ("samToolsIdxStats");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataMultipleBam." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for samtools idxstats";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('irigin1-PICARDTOOLSMARKDUPLICATES.idxstats','irigin3-PICARDTOOLSMARKDUPLICATES.idxstats');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - samtools idxstats list ');
+
+# expected output content
+$observedOutput=`wc -l $testingDir/finalResults/irigin1-PICARDTOOLSMARKDUPLICATES.idxstats`; 
+chomp $observedOutput;
+@position = split /\s/, $observedOutput;
+$observedOutput= $position[0];
+is($observedOutput,"952", 'toggleGenerator - samtools idxstats content ');
+
+
+#####################
+## TOGGLE samtools faidx
+#####################
+
+#Input data
+my $dataFasta = "../DATA/testData/fasta/TGICL/";
+$dataRefIrigin = "../DATA/Bank/referenceIrigin.fasta";
+
+print "\n\n#################################################\n";
+print "#### TEST SAMtools faidx\n";
+print "#################################################\n";
+
+# Remove files and directory created by previous test
+$testingDir="../DATA-TEST/samToolsFaidx-Blocks";
+$cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+@listSoft = ("samToolsFaidx");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+##Adding command to faidx fileConf
+#my $addCom = "echo \"\n\$samtoolsfaidx\n\TRINITY_DN75358_c0_g1_i1:1-100\n\" >> blockTestConfig.txt";
+#system($addCom);
+
+
+$runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFasta." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for samtools faidx";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+$observedOutput = `ls $testingDir/finalResults`;
+@observedOutput = split /\n/,$observedOutput;
+@expectedOutput = ('contig.faidx.fasta');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - samtools faidx list ');
+
+# expected output content
+$observedOutput=`cat $testingDir/finalResults/contig.faidx.fasta`; 
+chomp $observedOutput;
+my $expectedOutput = ">TRINITY_DN75358_c0_g1_i1:1-100
+ATCACACGAACACATACGCTCTTCCTTTCTCTGAAATAAGAAGGAGGAGAAGAAGAAGGT
+CATGGGGTTCACAAAACTCGCCCTAGTTCTGGCAATAGCA";
+is($observedOutput,$expectedOutput, 'toggleGenerator - samtools faidx content ');

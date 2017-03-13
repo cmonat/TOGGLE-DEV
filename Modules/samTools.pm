@@ -47,12 +47,24 @@ use checkFormat;
 #Index reference sequence in the FASTA format or extract subsequence from indexed reference sequence.
 sub samToolsFaidx
 {
-     my($refFastaFileIn)=@_;
-     if (toolbox::sizeFile($refFastaFileIn)==1)
-     { ##Check if entry file exist and is not empty
+     my($fastaFileIn, $faidxFileOut, $optionsHachees)=@_;
+     
+     unless ($faidxFileOut) #only one variable, in toggleGenerator indexing steps
+     {
+          $faidxFileOut = "/dev/null";
+     }
+     
+     my $options="";
+          if ($optionsHachees)
+          {
+               $options=toolbox::extractOptions($optionsHachees); ##Get given options
+          }
+          
+     if (checkFormat::checkFormatFasta($fastaFileIn)==1)
+     { ##Check if entry file exists and is a fasta file
                     
           #Execute command
-          my $command=$samtools." faidx ".$refFastaFileIn;
+          my $command=$samtools." faidx ".$fastaFileIn." ".$options." > ".$faidxFileOut;
           if(toolbox::run($command)==1)
           {
                ##DEBUG toolbox::exportLog("INFOS: samTools::samToolsFaidx : Correctly done\n",1);
@@ -60,13 +72,13 @@ sub samToolsFaidx
           }
           else
           {
-               toolbox::exportLog("ERROR: samTools::samToolsFaidx : Uncorrecly done\n",0);
+               toolbox::exportLog("ERROR: samTools::samToolsFaidx : Uncorrectly done\n",0);
                return 0;#Error in command
           }
      }
      else
      {
-        toolbox::exportLog("ERROR: samTools::samToolsFaidx : The file $refFastaFileIn is incorrect;failed\n",0);
+        toolbox::exportLog("ERROR: samTools::samToolsFaidx : The file $fastaFileIn is incorrect;failed\n",0);
         return 0;#Error in the file itself
      }
 }
@@ -233,6 +245,9 @@ sub samToolsMerge
 {
 
      my($bamFiles,$bamOutFile,$header,$optionsHachees)=@_;
+     
+     ##DEBUG     toolbox::exportLog("Warning: $header",2);
+
     
      my $bamToMerge;                                                  # set of correct bam, ready for command launch
      foreach my $putativeBam (@{$bamFiles})
@@ -283,6 +298,8 @@ sub samToolsMerge
 sub samToolsIdxstats
 {
      my($bamFileIn,$idxstatsOutput)=@_;
+     ##DEBUG     toolbox::exportLog("WARN: samTools::samToolsIdxstats : $bamFileIn,$idxstatsOutput\n",2);
+     
      if (toolbox::sizeFile($bamFileIn)==1)                       ##Check if entry file exists and is not empty
      { 
           #Check if the format is correct
@@ -291,7 +308,9 @@ sub samToolsIdxstats
                toolbox::exportLog("ERROR: samTools::samToolsIdxstats : The file $bamFileIn is not a SAM/BAM file\n",0);
                return 0;
           }
-          my $command="$samtools idxstats $bamFileIn > $idxstatsOutput";#Command to be executed
+          my $command="$samtools index $bamFileIn && $samtools idxstats $bamFileIn > $idxstatsOutput";#Command to be executed
+          
+          ##DEBUG          toolbox::exportLog("WARN: samTools::samToolsIdxstats : $command\n",2);
           
           if(toolbox::run($command)==1)                          #Execute command
           {
@@ -351,6 +370,7 @@ sub samToolsDepth
      }
      
      my $command = "$samtools depth $options $bamFilesToCompute > $depthOutputFile";#Command to be launched
+     ##DEBUG     toolbox::exportLog("WARN: command was \n\t$command\n",2);
      if(toolbox::run($command)==1)
      {
           return 1;#Command Ok
