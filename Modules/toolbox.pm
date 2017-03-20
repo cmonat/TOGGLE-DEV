@@ -67,18 +67,23 @@ sub exportLog
 {
 
     my ($logLines,$controlValue)=@_;
+	my $indivName = "TOGGLE";
+	my $currentSoft = "toggleGenerator";
+	# test if directory contain individuSoft.txt
+	if ((-e "individuSoft.txt"))
+	{
+		# Get the name of indivudal analysed when this function is called
+		$indivName = `head -n 1 individuSoft.txt`;
+		chomp $indivName;
 
-    # Get the name of indivudal analysed when this function is called
-    my $indivName = `head -n 1 individuSoft.txt`;
-    chomp $indivName;
-
-    # Get the name of software executed when this function is called
-    my $currentSoft = `tail -n 1 individuSoft.txt`;
-    chomp $currentSoft;
+		# Get the name of software executed when this function is called
+		$currentSoft = `tail -n 1 individuSoft.txt`;
+		chomp $currentSoft;
+	}
 
     # Initialization of the log name from the name of the individual and the name of software
     my $logBasicName=$indivName."_".$currentSoft."_log";
-
+	$logBasicName = relativeToAbsolutePath($logBasicName,0);
     # Opening of the log file and erro file
     open (OUT, '>>', $logBasicName.".o") or toolbox::exportLog("Cannot create $logBasicName.o file: $!",0);
     open (ERR, '>>', $logBasicName.".e") or toolbox::exportLog("Cannot create $logBasicName.e file: $!",0);
