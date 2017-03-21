@@ -87,13 +87,13 @@ system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with 
 is(fastqc::execution($fastqPath,$fastqcDir),1,'fastqc::execution');     
 
 # expected output test
-my $expectedOutput = 'fastqcOut/RC3_2_fastqc.zip';
 my $observedOutput = `ls $fastqcDir`;
-chomp($observedOutput);
-$observedOutput = $fastqcDir."/".$observedOutput;
-is($observedOutput,$expectedOutput,'fastqc::execution - output list'); 
+my @observedOutput = split /\n/,$observedOutput;
+my @expectedOutput = ('RC3_2_fastqc.html','RC3_2_fastqc.zip');
+
+is_deeply(\@observedOutput,\@expectedOutput,'fastqc::execution - output list');
 
 # expected content test
-my $observedContent=`unzip -l $observedOutput | tail -n1`;
-my $validContent = ( $observedContent =~ m/19 files/);
+my $observedContent=`unzip -l $fastqcDir/RC3_2_fastqc.zip | tail -n1`;
+my $validContent = ( $observedContent =~ m/20 files/);
 is($validContent,1,'fastqc::execution - output content');
