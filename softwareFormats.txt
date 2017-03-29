@@ -211,3 +211,7 @@ OUT=NA
 $checkFormatSamOrBam
 IN=sam,bam
 OUT=NA
+
+$sniplayPed2fasta
+IN=ped
+OUT=fasta
