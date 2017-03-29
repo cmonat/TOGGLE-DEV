@@ -236,7 +236,7 @@ is_deeply(\@observedOutput,\@expectedOutput,'tophat::tophat2 - output list');
 
 
 # expected output test
-$expectedMD5sum="d5a01979467649ccfec0aeb7c1f1716e";
+$expectedMD5sum="b505ebc58991d34a88f4bab30506467b";
 $observedMD5sum=`md5sum $tmpDir/RNASeq.accepted_hits.bam`;# structure of the test file
 @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
 $observedMD5sum = $withoutName[0];       # just to have the md5sum result
