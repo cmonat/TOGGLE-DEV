@@ -76,7 +76,7 @@ print "#### TEST SNPdiscoveryPaired paired ARCAD (one individu) / no SGE mode\n"
 print "#################################################\n";
 
 # Copy file config
-my $fileSNPPairedIni="../SNPdiscoveryPaired.config.txt";          # Path of the SNPdiscoveryPaired.config.txt
+my $fileSNPPairedIni="../exampleConfigs/SNPdiscoveryPaired.config.txt";          # Path of the SNPdiscoveryPaired.config.txt
 my $fileSNPPairedNoSGE="SNPdiscoveryPairedTest.config.txt";
 
 
@@ -194,7 +194,7 @@ print "#### TEST SNPdiscoveryPaired paired Irigin (two individus) / SGE mode\n";
 print "#################################################\n";
 
 # Copy file config
-$fileSNPPairedIni="../SNPdiscoveryPaired.config.txt";          # Path of the SNPdiscoveryPaired.config.txt
+$fileSNPPairedIni="../exampleConfigs/SNPdiscoveryPaired.config.txt";          # Path of the SNPdiscoveryPaired.config.txt
 my $fileSNPPairedSGE="SNPdiscoveryPairedTestSGE.config.txt";
 
 $cmd="cp $fileSNPPairedIni $fileSNPPairedSGE";
@@ -246,7 +246,7 @@ print "#### TEST SNPdiscoverySingle Irigin (one individu) / no SGE mode\n";
 print "#################################################\n";
 
 # Copy file config
-my $fileSNPSingleIni="../SNPdiscoverySingle.config.txt";
+my $fileSNPSingleIni="../exampleConfigs/SNPdiscoverySingle.config.txt";
 my $fileSNPSingleNoSGE="SNPdiscoverySingleNoSGE.config.txt";
 
 $cmd="cp $fileSNPSingleIni $fileSNPSingleNoSGE";
@@ -328,7 +328,7 @@ print "#### TEST RNASEQPaired  (one individu) / no SGE mode\n";
 print "#################################################\n";
 
 # Copy file config
-my $fileRNAPairedIni="../RNASeq.config.txt";
+my $fileRNAPairedIni="../exampleConfigs/RNASeq.config.txt";
 my $fileRNAPairedNoSGE="RNASeqNoSGE.config.txt";
 
 $cmd="cp $fileRNAPairedIni $fileRNAPairedNoSGE";
@@ -497,7 +497,7 @@ print "#### TEST processRadtags  (single) / no SGE mode\n";
 print "#################################################\n";
 
 # Copy file config
-my $fileconfRadseq="../radseqSingle.config.txt";
+my $fileconfRadseq="../exampleConfigs/radseqSingle.config.txt";
 my $fileconfRadseqNoSGE="radseqSingle.config.txt";
 
 $cmd="cp $fileconfRadseq $fileconfRadseqNoSGE";

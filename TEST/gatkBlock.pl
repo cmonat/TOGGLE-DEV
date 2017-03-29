@@ -192,7 +192,7 @@ print "#### TEST one VCF / no SGE mode\n";
 print "#################################################\n";
 
 # Copy file config
-my $fileVcf="../vcf.config.txt";
+my $fileVcf="../exampleConfigs/vcf.config.txt";
 
 # Remove files and directory created by previous test
 $testingDir="../DATA-TEST/gatkSelectVariants-noSGE-Blocks";

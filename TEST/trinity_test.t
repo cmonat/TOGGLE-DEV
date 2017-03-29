@@ -54,15 +54,14 @@ use trinity;
 my $expectedData="../../DATA/expectedData/contigTrinity.fasta";
 
 ## rm readcount in initialDir if exist
+if (-e "../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.fq.readcount")
+{ 
+     `rm ../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/*.readcount`;
+}
 if (-e "../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.readcount")
 { 
- `rm ../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.readcount'`;
+     `rm ../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/*.readcount`;
 }
-if (-e "../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R2.readcount")
-{ 
- `rm ../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/*.readcount'`;
-}
-
 
 #########################################
 #Remove files and directory created by previous test

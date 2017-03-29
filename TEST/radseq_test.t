@@ -104,7 +104,7 @@ is_deeply($hashOrder, $hashOrderRM, "toolbox::rmHashOrder - cleanning step one O
 
 
 my $outputDir = "./";
-my $fileConf = '../../radseqSingle.config.txt';
+my $fileConf = '../../exampleConfigs/radseqSingle.config.txt';
 my $initialDir = '../../DATA/testData/radseq/single/';
 my $keyfile = "../../DATA/testData/radseq/keyfileTestSingle";
 my $checkFastq = 1;
