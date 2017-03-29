@@ -65,6 +65,7 @@ while (<LOCALCONFIG>)
 		chop $_;
 		my @line = split ("our ", $_);
 		$line[1] =~ s/\s=\s/=/g; # remove space $java = "/....";
+		$line[1] =~ s/\\//g; # remove \ $java = "/....";
 		$line[1] =~ s/;\s*$//g; # remove ;\s in the end line
 		@line = split("=", $line[1]);
 		$line[1]=~s/"//g if defined $line[1];
@@ -75,17 +76,15 @@ close LOCALCONFIG;
 
 
 # Verify 0 = 0;
-is($java,$dictLocation{"\$java"},"java infos");
+is($java,"/usr/java/jre1.8.0_111//bin/java -jar","java infos");
 
 is($bwa,$dictLocation{"\$bwa"},"bwa infos");
 
-$dictLocation{"\$picard"}=~ s/\$java/$java/; #Need to de-interpret $java
-is($picard,$dictLocation{"\$picard"},"picard infos");
+is($picard,"/usr/java/jre1.8.0_111//bin/java -jar /usr/local/picard-tools-2.5.0//picard.jar","picard infos");
 
 is($samtools,$dictLocation{"\$samtools"},"samtools infos");
 
-$dictLocation{"\$GATK"}=~ s/\$java/$java/;#Need to de-interpret $java
-is($GATK,$dictLocation{"\$GATK"},"GATK infos");
+is($GATK,'/usr/java/jre1.8.0_111//bin/java -jar /usr/local/gatk-3.6/GenomeAnalysisTK.jar',"GATK infos");
 
 is($fastqc,$dictLocation{"\$fastqc"},"fastqc infos");
 
@@ -106,6 +105,9 @@ is($cufflinks,$dictLocation{"\$cufflinks"},"cufflinks infos");
 is($cuffdiff,$dictLocation{"\$cuffdiff"},"cuffdiff infos");
 
 is($cuffmerge,$dictLocation{"\$cuffmerge"},"cuffmerge infos");
+
+is($snpEff,'/usr/java/jre1.8.0_111//bin/java -jar -jar /usr/local/snpEff-4.3//snpEff.jar',"snpEff infos");
+
 
 
 ######################################
