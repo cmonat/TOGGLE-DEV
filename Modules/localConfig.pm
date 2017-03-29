@@ -39,11 +39,11 @@ use Exporter;
 
 our @ISA=qw(Exporter);
 
-our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff);
+our @EXPORT=qw($bwa $picard $samtools $GATK $cutadapt $fastqc $java $toggle $fastxTrimmer $tophat2 $bowtie2Build $bowtieBuild $htseqcount $cufflinks $cuffdiff $cuffmerge $tgicl $trinity  $stacks $snpEff $plink);
 
 
 #toggle path
-our $toggle="/path/to/toggleFolder";
+our $toggle="/path/to/toggle";
 
 #PATH for Mapping on cluster
 our $java = "/path/to/java -Xmx12g -jar";
@@ -91,5 +91,7 @@ our $stacks = "/path/to/process_radtags";
 #path to snpEff
 our $snpEff = "/path/to/snpEff/snpEff.jar";
 
+#path to plink
+our $plink = "/path/to/plink";
 
 1;
