@@ -180,7 +180,7 @@ sub correctName
         case ($name =~ m/^tgicl/i){$correctedName="tgicl"}
         
 	#FOR SNIPLAY
-	case ($name =~ m/^sniplayPed[2T][o]fasta/i){$correctedName="sniplayPed2fasta"}
+	case ($name =~ m/^sniplayPed2fasta/i){$correctedName="sniplayPed2fasta"}
 
         #FOR trinity
         case ($name =~ m/^trinity/i){$correctedName="trinity"}  # Correction for Trinity step
