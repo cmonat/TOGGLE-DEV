@@ -1,7 +1,7 @@
 
-$samToolsSort
+$sniplayPed2fasta
 
 
 
 $order
-1=samToolsSort
+1=sniplayPed2fasta
