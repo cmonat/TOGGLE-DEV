@@ -223,6 +223,9 @@ sub writeLogVersion
 			#For format checking
 			case($softOrder =~ m/^check/i){next;}
 
+			#For sniplay
+			case($softOrder =~ m/^sniplay/i){next;}
+
 			else {toolbox::exportLog("ERROR : $0 : the $softOrder function or software is unknown to TOGGLE, cannot continue",0);}; # Name unknown to TOGGLE, must stop
 		}
 	}
