@@ -62,6 +62,7 @@ use HTSeq;
 use tgicl;
 use trinity;
 use radseq;
+use sniplay;
 
 ##########################################
 # recovery of parameters/arguments given when the program is executed
@@ -225,6 +226,7 @@ $hashOrder = toolbox::rmHashOrder($hashOrder, "processRadtags");
 
 ##FASTA associated variables
 my $fastaFileIn="NA";
+my $fastaFileOut="NA";
 my $faidxFileOut="NA";
 my $localFastaFileIn = "NA";
 
@@ -242,6 +244,9 @@ my $listOfBam=();
 
 ##VCF associated variables
 my ($vcfFileIn,$vcfFileOut)=("NA","NA");
+
+##PED associated variables
+my ($pedFileIn)=("NA");
 
 ##Intervals/Report associated variables
 my ($intervalsFile,$tableReport,$vcfSnpKnownFile,$depthFileOut);
