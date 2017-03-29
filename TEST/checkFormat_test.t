@@ -57,7 +57,7 @@ can_ok('checkFormat','checkFormatSamOrBam');
 use checkFormat;
 
 my $expectedData="../../DATA/expectedData/";
-my $configFile="../../SNPdiscoveryPaired.config.txt";
+my $configFile="../../exampleConfigs/SNPdiscoveryPaired.config.txt";
 
 #########################################
 #Remove files and directory created by previous test
