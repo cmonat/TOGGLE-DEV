@@ -98,6 +98,15 @@ print "\n\n#################################################\n";
 print "#### TEST Trinity assembly pairedOneIndividuPacaya (one individu) / no SGE mode\n";
 print "#################################################\n";
 
+## rm readcount in initialDir if exist
+if (-e "../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.readcount")
+{ 
+ `rm ../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.readcount'`;
+}
+if (-e "../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R2.readcount")
+{ 
+ `rm ../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/*.readcount'`;
+}
 
 #Creating config file for this test
 @listSoft = ("trinity");

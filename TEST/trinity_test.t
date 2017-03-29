@@ -53,6 +53,17 @@ use trinity;
 
 my $expectedData="../../DATA/expectedData/contigTrinity.fasta";
 
+## rm readcount in initialDir if exist
+if (-e "../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.readcount")
+{ 
+ `rm ../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.readcount'`;
+}
+if (-e "../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R2.readcount")
+{ 
+ `rm ../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/*.readcount'`;
+}
+
+
 #########################################
 #Remove files and directory created by previous test
 #########################################
@@ -182,10 +193,6 @@ $observedAnswer=`$cmd`;
 chomp($observedAnswer);
 
 is($observedAnswer,$expectedAnswer,'trinity::trinityRun- output content - single mode');
-
-## rm readcount in initialDir
-`rm ../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.readcount'`;
-`rm ../../DATA/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R2.readcount'`;
 
 1;
 
