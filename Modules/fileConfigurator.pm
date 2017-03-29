@@ -76,6 +76,8 @@ our %testParams=    (
         samToolsDepth => [""],
         samToolsFlagstat => [""],
         samToolsMpileUp => [""],
+	#sniplay
+	sniplayPed2fasta => [""],
         #Fastqc
         fastqc => [""],
         #Cutadapt
