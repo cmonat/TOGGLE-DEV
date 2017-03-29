@@ -328,7 +328,7 @@ foreach my $file (@{$initialDirContent})
 
 #Checking if the files are taken in charge by TOGGLE
 
-if ($previousExtension !~ m/fasta|fastq|vcf|sam|bam/)  # j'ai rajouté fasta pour les besoins de TGICL
+if ($previousExtension !~ m/fasta|fastq|vcf|sam|bam|ped/)  # j'ai rajouté fasta pour les besoins de TGICL
 {
     toolbox::exportLog("ERROR : $0 : The filetype $previousExtension is not taken in charge by TOGGLE\n",0);
 }
