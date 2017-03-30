@@ -142,7 +142,7 @@ sub tgiclVersion
 
 sub tophatVersion
 {
-	my $version = `tophat -v` or die toolbox::exportLog("ERROR: versionSoft::tophatVersion : Can not grep tophat version\nPlease check your tophat installation.\n", 0); #We works with the STDOUT output
+	my $version = `$tophat2 -v` or die toolbox::exportLog("ERROR: versionSoft::tophatVersion : Can not grep tophat version\nPlease check your tophat installation.\n", 0); #We works with the STDOUT output
 	chomp($version);
 	return $version;
 }
@@ -158,6 +158,7 @@ sub writeLogVersion
 {
 	my ($fileConf, $version) = @_;
 	my %softPathVersion = ("toggle"	=> $version);
+	my %softPath = ("toggle"	=> $toggle);
 
 	toolbox::checkFile($fileConf);
 	my $configInfo=toolbox::readFileConf($fileConf);
@@ -170,55 +171,97 @@ sub writeLogVersion
 		switch (1)
 		{
 			#FOR bwa.pm
-			case ($softOrder =~ m/^bwa.*/i){$softPathVersion{"bwa"}= bwaVersion if not defined $softPathVersion{"bwa"}; }
+			case ($softOrder =~ m/^bwa.*/i){$softPathVersion{"bwa"}= bwaVersion if not defined $softPathVersion{"bwa"};
+											$softPath{"bwa"}= $bwa if not defined $softPath{"bwa"};
+											}
 
 			#FOR samTools.pm
-			case ($softOrder =~ m/^samtools.*/i){$softPathVersion{"samtools"}= samtoolsVersion if not defined $softPathVersion{"samtools"};}
+			case ($softOrder =~ m/^samtools.*/i){$softPathVersion{"samtools"}= samtoolsVersion if not defined $softPathVersion{"samtools"};
+												 $softPath{"samtools"}= $samtools if not defined $softPath{"samtools"};
+												}
 
 			#FOR picardTools.pm
-			case ($softOrder =~ m/^picard.*/i){$softPathVersion{"java"}= javaVersion if not defined $softPathVersion{"java"};
-											   $softPathVersion{"picard"}= picardToolsVersion if not defined $softPathVersion{"picard"};}
-			
+			case ($softOrder =~ m/^picard.*/i){ $softPathVersion{"java"}= javaVersion if not defined $softPathVersion{"java"};
+												$softPath{"java"}= $java if not defined $softPath{"java"};
+												$softPathVersion{"picard"}= picardToolsVersion if not defined $softPathVersion{"picard"};
+												$softPath{"picard"}= $picard if not defined $softPath{"picard"};
+											   }
+
 			#FOR gatk.pm
 			case ($softOrder =~ m/^gatk.*/i){$softPathVersion{"java"}= javaVersion if not defined $softPathVersion{"java"};
-											 $softPathVersion{"GATK"}= gatkVersion if not defined $softPathVersion{"GATK"};}
+											 $softPathVersion{"GATK"}= gatkVersion if not defined $softPathVersion{"GATK"};
+											 $softPath{"java"}= $java if not defined $softPath{"java"};
+											 $softPath{"GATK"}= $GATK if not defined $softPath{"GATK"};
+											 }
 
 			#FOR fastqc
-			case ($softOrder =~ m/^fastqc/i){$softPathVersion{"fastqc"}= fastqcVersion if not defined $softPathVersion{"fastqc"}}
+			case ($softOrder =~ m/^fastqc/i){$softPathVersion{"fastqc"}= fastqcVersion if not defined $softPathVersion{"fastqc"};
+											 $softPath{"fastqc"}= $fastqc if not defined $softPath{"fastqc"};
+											 }
 
 			#FOR fastxToolkit
-			case ($softOrder =~ m/^fastx.*/i){$softPathVersion{"fastxTrimmer"}= fastxToolkitVersion if not defined $softPathVersion{"fastxTrimmer"};}
+			case ($softOrder =~ m/^fastx.*/i){$softPathVersion{"fastxTrimmer"}= fastxToolkitVersion if not defined $softPathVersion{"fastxTrimmer"};
+											  $softPath{"fastxTrimmer"}= $fastxTrimmer if not defined $softPath{"fastxTrimmer"};
+											  }
 
 			#FOR tophat.pm
-			case ($softOrder =~ m/^bowtie2.*/i){$softPathVersion{"bowtie2Build"}= bowtie2BuildVersion if not defined $softPathVersion{"bowtie2Build"}; }
-			case ($softOrder =~ m/^bowtie/i){$softPathVersion{"bowtieBuild"}= bowtieBuildVersion if not defined $softPathVersion{"bowtieBuild"}; }
+			case ($softOrder =~ m/^bowtie2.*/i){$softPathVersion{"bowtie2Build"}= bowtie2BuildVersion if not defined $softPathVersion{"bowtie2Build"};
+												$softPath{"bowtie2Build"}= $bowtie2Build if not defined $softPath{"bowtie2Build"};
+												}
+			case ($softOrder =~ m/^bowtie/i){$softPathVersion{"bowtieBuild"}= bowtieBuildVersion if not defined $softPathVersion{"bowtieBuild"};
+											 $softPath{"bowtieBuild"}= $bowtieBuild if not defined $softPath{"bowtieBuild"};
+											 }
+
 			case ($softOrder =~ m/^tophat.*/i){$softPathVersion{"tophat2"}= tophatVersion if not defined $softPathVersion{"tophat2"};
 											   $softPathVersion{"bowtieBuild"}= bowtieBuildVersion if not defined $softPathVersion{"bowtieBuild"};
-											   $softPathVersion{"bowtie2Build"}= bowtie2BuildVersion if not defined $softPathVersion{"bowtie2Build"};}
+											   $softPathVersion{"bowtie2Build"}= bowtie2BuildVersion if not defined $softPathVersion{"bowtie2Build"};
+											   $softPath{"tophat2"}= $tophat2 if not defined $softPath{"tophat2"};
+											   $softPath{"bowtieBuild"}= $bowtieBuild if not defined $softPath{"bowtieBuild"};
+											   $softPath{"bowtie2Build"}= $bowtie2Build if not defined $softPath{"bowtie2Build"};
+											   }
 
 			#FOR cufflinks.pm
-			case ($softOrder =~ m/^cufflinks.*/i){$softPathVersion{"cufflinks"}= cufflinksVersion if not defined $softPathVersion{"cufflinks"}; }
-			case ($softOrder =~ m/^cuffdiff.*/i){$softPathVersion{"cuffdiff"}= cufflinksVersion if not defined $softPathVersion{"cuffdiff"}; }
-			case ($softOrder =~ m/^cuffmerge.*/i){$softPathVersion{"cuffmerge"}= cufflinksVersion if not defined $softPathVersion{"cuffmerge"}; }
+			case ($softOrder =~ m/^cufflinks.*/i){$softPathVersion{"cufflinks"}= cufflinksVersion if not defined $softPathVersion{"cufflinks"}; 
+												  $softPath{"cufflinks"}= $cufflinks if not defined $softPath{"cufflinks"};
+												  }
+			case ($softOrder =~ m/^cuffdiff.*/i){$softPathVersion{"cuffdiff"}= cufflinksVersion if not defined $softPathVersion{"cuffdiff"};
+												 $softPath{"cuffdiff"}= $cufflinks if not defined $softPath{"cuffdiff"};
+												 }
+			case ($softOrder =~ m/^cuffmerge.*/i){$softPathVersion{"cuffmerge"}= cufflinksVersion if not defined $softPathVersion{"cuffmerge"};
+												  $softPath{"cuffmerge"}= $cufflinks if not defined $softPath{"cuffmerge"};
+												  }
 
 			#FOR HTSeq
-			case ($softOrder =~ m/^htseq.*/i){$softPathVersion{"htseqcount"}= htseqcountVersion if not defined $softPathVersion{"htseqcount"}; }
+			case ($softOrder =~ m/^htseq.*/i){$softPathVersion{"htseqcount"}= htseqcountVersion if not defined $softPathVersion{"htseqcount"};
+											  $softPath{"htseqcount"}= $htseqcount if not defined $softPath{"htseqcount"};
+											  }
 
 			#FOR snpEff.pm
 			case ($softOrder =~ m/^snp.*/i){$softPathVersion{"java"}= javaVersion if not defined $softPathVersion{"java"};
-											$softPathVersion{"snpEff"}= snpeffVersion if not defined $softPathVersion{"snpEff"};}
+											$softPathVersion{"snpEff"}= snpeffVersion if not defined $softPathVersion{"snpEff"};
+											$softPath{"java"}= $java if not defined $softPath{"java"};
+											$softPath{"snpEff"}= $snpEff if not defined $softPath{"snpEff"};
+											}
 
 			#FOR processRadtags.pm
-			case ($softOrder =~ m/process.*/i){$softPathVersion{"stacks"}= stacksVersion if not defined $softPathVersion{"stacks"};}
+			case ($softOrder =~ m/process.*/i){$softPathVersion{"stacks"}= stacksVersion if not defined $softPathVersion{"stacks"};
+											   $softPath{"stacks"}= $stacks if not defined $softPath{"stacks"};
+											   }
 
 			#FOR cutadapt functions
-			case ($softOrder =~ m/^cutadapt/i){$softPathVersion{"cutadapt"}= cutadaptVersion if not defined $softPathVersion{"cutadapt"};}
+			case ($softOrder =~ m/^cutadapt/i){$softPathVersion{"cutadapt"}= cutadaptVersion if not defined $softPathVersion{"cutadapt"};
+											   $softPath{"cutadapt"}= $cutadapt if not defined $softPath{"cutadapt"};
+											  }
 
 			#FOR TGICL
-			case ($softOrder =~ m/^tgicl/i){$softPathVersion{"TGICL"}= tgiclVersion if not defined $softPathVersion{"TGICL"};}
+			case ($softOrder =~ m/^tgicl/i){$softPathVersion{"tgicl"}= tgiclVersion if not defined $softPathVersion{"tgicl"};
+											$softPath{"tgicl"}= $tgicl if not defined $softPath{"tgicl"};
+											}
 
 			#FOR trinity
-			case ($softOrder =~ m/^trinity/i){$softPathVersion{"trinity"}= trinityVersion if not defined $softPathVersion{"trinity"};}
+			case ($softOrder =~ m/^trinity/i){$softPathVersion{"trinity"}= trinityVersion if not defined $softPathVersion{"trinity"};
+											  $softPath{"trinity"}= $trinity if not defined $softPath{"trinity"};
+											  }
 			
 			#For format checking
 			case($softOrder =~ m/^check/i){next;}
@@ -227,30 +270,19 @@ sub writeLogVersion
 		}
 	}
 	## DEBUG print Dumper(%softPathVersion);
-
-	open (my $fhConfig, "<", "$toggle/Modules/localConfig.pm");
+	
+	open (my $fhConfig, "<", "$toggle/modules/localConfig.pm");
 	while (my $line = <$fhConfig>)
 	{
+		no strict "vars";
 		chomp $line;
 		chop $line; #Remove the last character, ie ";"
 		next unless $line =~ m/^our \$/;
 		my ($soft,$value) = split /=/, $line;
 		$soft =~ s/our| |\$//g;
-		if (defined $value)
-		{
-			$value =~ s/\"//g;
-			$value =~ s/\w+ |\$|-//g unless $soft =~ m/java|toggle/i;
-			$value =~ s/^ //;
-		}
-		else
-		{
-			$value = "NOT DEFINED";
-		}
-		
-		toolbox::exportLog("$soft : $value : $softPathVersion{$soft}",1) if defined $softPathVersion{$soft};
+		toolbox::exportLog("$soft : $softPath{$soft} : $softPathVersion{$soft}",1) if defined $softPathVersion{$soft};
 	}
 }
-
 1;
 
 
