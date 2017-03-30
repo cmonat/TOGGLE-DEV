@@ -7,7 +7,7 @@ modules/Capture/
 modules/Data/
 modules/Test/
 GLOBAL_ANALYSIS*
-test/blockTestConfig.txt
+test/blocks/blockTestConfig.txt
 test/software.config.txt
 test/SNPdiscoveryPairedTest.config.txt
 /data/testData/fastq/assembly/pairedOneIndivuPacaya/g02L5Mapped_R1.fq.readcount
