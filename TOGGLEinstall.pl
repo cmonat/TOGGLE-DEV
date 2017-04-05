@@ -165,7 +165,7 @@ chdir $INSTALLPATH or die ("\nCannot go to $INSTALLPATH : $!\nTOGGLE is cloned b
 
 #Parsing automatically the localConfig.pm file for softwares
 
-my $localConfigFile = "Modules/localConfig.pm";
+my $localConfigFile = "modules/localConfig.pm";
 
 open (my $fhConfig, "<", $localConfigFile) or die ("\nCannot read the original localConfig.pm file:\n$!\nTOGGLE is cloned but not configured\n");
 
@@ -229,7 +229,7 @@ foreach my $soft (keys %{$requirements->{"software"}})
 
 print ("\nCONFIGURING YOUR PERSONAL localConfig.pm");
 
-my $configOk = "Modules/localConfigTEMP.pm";
+my $configOk = "modules/localConfigTEMP.pm";
 
 open (my $fhConfig2, "<", $localConfigFile) or die ("\nCannot read the original localConfig.pm file:\n$!\nTOGGLE is cloned but not configured\n");
 open (my $fhOut, ">", $configOk) or die ("\nCannot create the local configuration file:\n$!\nTOGGLE is cloned but not configured\n");
@@ -284,7 +284,7 @@ my $wgetCommand = "wget http://bioinfo-web.mpl.ird.fr/toggle/perlModules.tar.gz"
 system("$wgetCommand") and die ("\nCannot download the perl libraries: $!\n");
 
 # DECLARE VARIABLES WITH PATHS 
-my $MODULES=$INSTALLPATH."/Modules";
+my $MODULES=$INSTALLPATH."/modules";
 
 print "\tDecompressing Perl Modules\n";
 
