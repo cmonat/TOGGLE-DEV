@@ -49,6 +49,7 @@ can_ok('bwa','bwaAln');
 can_ok('bwa','bwaSampe');
 can_ok('bwa','bwaSamse');
 can_ok('bwa','bwaMem');
+can_ok('bwa','bwaSw');
 
 use localConfig;
 use bwa;
@@ -280,7 +281,7 @@ chomp $grepResult;
 is($grepResult,0,'bwa::mem - Test for the result of bwa mem single');
 
 ##########################################
-##### bwa::mem single
+##### bwa::mem Paired
 ##########################################
 
 #output files
@@ -300,6 +301,29 @@ is_deeply(\@observedOutput,\@expectedOutput,'bwa::mem Paired - Files created');
 $grepResult= `grep -c 'XT:A:U' $samFileOut`;
 chomp $grepResult;
 is($grepResult,0,'bwa::mem - Test for the result of bwa mem paired');
+
+
+##########################################
+##### bwa::bwaSw Paired
+##########################################
+
+#output files
+$samFileOut="RC3.BWASWPaired.sam";
+
+##Running test
+is (bwa::bwaSw($samFileOut,$fastaRef,$forwardFastq,$reverseFastq),'1',"bwa::bwaSw - Test for bwa bwaSw running paired");
+
+
+###Verify if output are correct for mem single
+@expectedOutput = ("bwa_TEST_log.e","bwa_TEST_log.o","individuSoft.txt","RC3_1.BWAALN.sai","RC3_2.BWAALN.sai","RC3.BWAALN.sai","RC3.BWAMEMPaired.sam","RC3.BWAMEM.sam","RC3.BWASAMPE.sam","RC3.BWASAMSE.sam","RC3.BWASWPaired.sam", "Reference.fasta","Reference.fasta.amb","Reference.fasta.ann","Reference.fasta.bwt","Reference.fasta.pac","Reference.fasta.sa");
+$observedOutput = `ls`;
+@observedOutput = split /\n/,$observedOutput;
+is_deeply(\@observedOutput,\@expectedOutput,'bwa::bwaSw Paired - Files created');
+
+##Output value test
+$grepResult= `grep -c 'XT:A:U' $samFileOut`;
+chomp $grepResult;
+is($grepResult,0,'bwa::bwaSw - Test for the result of bwa bwaSw paired');
 
 exit;
 

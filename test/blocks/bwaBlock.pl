@@ -34,23 +34,52 @@ use strict;
 use warnings;
 use Test::More 'no_plan';
 use Test::Deep;
-use localConfig;
 use fileConfigurator;
+use localConfig;
 
 
+#####################
+## PATH for datas test
+#####################
 
-#####################################################
-## BLOCK TEST
-#####################################################
+# references files
+my $dataRefIrigin = "$toggle/data/Bank/referenceIrigin.fasta";
+# input file
+my $dataFastq="$toggle/data/testData/fastq/pairedTwoIndividusIrigin";
+
+
 print "\n\n#################################################\n";
-print "#### INDIVIDUAL BLOCK TEST \n";
+print "#### TEST gatk BaseRecalibrator\n";
 print "#################################################\n";
 
-system("perl $toggle/test/blocks/assemblyBlock.pl") and warn "ERROR: $0: Cannot run test for assemblyBlock.pl  \n$!\n";
-system("perl $toggle/test/blocks/gatkBlock.pl") and warn "ERROR: $0: Cannot run test for gatkBlock.pl  \n$!\n";
-system("perl $toggle/test/blocks/picardtoolsBlock.pl") and warn "ERROR: $0: Cannot run test for picardtoolsBlock.pl  \n$!\n";
-system("perl $toggle/test/blocks/samtoolsBlock.pl") and warn "ERROR: $0: Cannot run test for samtoolsBlock.pl  \n$!\n";
-system("perl $toggle/test/blocks/checkFormatBlock.pl") and warn "ERROR: $0: Cannot run test for checkFormatBlock.pl  \n$!\n";
-system("perl $toggle/test/blocks/fastqUtilsBlock.pl") and warn "ERROR: $0: Cannot run test for fastqUtilsBlock.pl  \n$!\n";
-system("perl $toggle/test/blocks/bwaBlock.pl") and warn "ERROR: $0: Cannot run test for bwaBlock.pl  \n$!\n";
+# Remove files and directory created by previous test
+my $testingDir="$toggle/dataTest/bwaSw-noSGE-Blocks";
+my $cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+my @listSoft = ("bwaSw");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataFastq." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for bwaSw";
+
+# check final results
+
+# expected output content
+my $observedOutput = `ls $testingDir/finalResults`;
+my @observedOutput = split /\n/,$observedOutput;
+my @expectedOutput = ('irigin1BWASW.sam','irigin3BWASW.sam');
+
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - Two fastq (no SGE) BWA-SW file list ');
+
+# expected output value
+my $grepResult= `grep -c 'H3:C39R6ACXX' $testingDir/finalResults/irigin1BWASW.sam`;
+chomp $grepResult;
+is($grepResult,2004,'toggleGenerator - Two fastq (no SGE) BWA-SW result of bwa bwaSw irigin1BWASW');
+# expected output value
+$grepResult= `grep -c 'H2:C381HACXX' $testingDir/finalResults/irigin3BWASW.sam`;
+chomp $grepResult;
+is($grepResult,2003,'toggleGenerator - Two fastq (no SGE) BWA-SW result of bwa bwaSw irigin3BWASW');
 

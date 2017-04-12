@@ -112,6 +112,7 @@ sub correctName
         case ($name =~ m/^bwa[\s|\.|\-| \/|\\|\|]*samse/i){$correctedName="bwaSamse"} # Correction for bwaSamse
         case ($name =~ m/^bwa[\s|\.|\-| \/|\\|\|]*index/i){$correctedName="bwaIndex"} # Correction for bwaIndex
         case ($name =~ m/^bwa[\s|\.|\-| \/|\\|\|]*mem/i){$correctedName="bwaMem"} # Correction for bwaMem
+        case ($name =~ m/^bwa[\s|\.|\-| \/|\\|\|]*sw/i){$correctedName="bwaSw"} # Correction for bwaSw
 
 
         #FOR samTools.pm

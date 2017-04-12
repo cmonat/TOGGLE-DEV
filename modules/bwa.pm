@@ -218,6 +218,53 @@ sub bwaMem
 }
 1;
 
+##BWA SW
+#Generate alignments in the SAM format.
+#BWA-SW, 
+sub bwaSw 
+{
+    my($samFileOut,$refFastaFileIn, $forwardFastqFileIn,$reverseFastqFileIn,$optionsHachees)=@_;
+    my $options="";
+    if ($optionsHachees)
+    {
+        $options=toolbox::extractOptions($optionsHachees);		##Get given options
+    }
+    
+    if ((toolbox::sizeFile($forwardFastqFileIn)==1) and not (defined $reverseFastqFileIn)) 
+    {
+	my $command="$bwa bwasw $options $refFastaFileIn $forwardFastqFileIn   > $samFileOut";		# command line
+        toolbox::exportLog("INFOS: bwa::bwaSw : $command\n",1);
+
+        if (toolbox::run($command)==1)
+        {
+            return 1;
+        }
+        else
+        {
+            toolbox::exportLog("ERROR: bwa::bwaSw : ABORTED\n",0);
+        }
+    }
+    elsif ((toolbox::sizeFile($forwardFastqFileIn)==1) and (toolbox::sizeFile($reverseFastqFileIn)==1))
+    {
+        
+	my $command="$bwa bwasw $options $refFastaFileIn $forwardFastqFileIn $reverseFastqFileIn > $samFileOut";		# command line
+        
+        if (toolbox::run($command)==1)
+        {
+            return 1;
+        }
+        else
+        {
+            toolbox::exportLog("ERROR: bwa::bwaSw : ABORTED\n",0);
+        }
+    }
+    else
+    {
+       toolbox::exportLog("ERROR: bwa::bwaSw : Problem with the files $refFastaFileIn, $forwardFastqFileIn or/and $reverseFastqFileIn\n",0);
+       return 0;
+    }                                                                                                                              
+}
+1;
 =head1 NAME
 
     Package I<bwa> 
@@ -235,6 +282,8 @@ sub bwaMem
 	bwa::bwaSamse ($samFileOut,$refFastaFileIn,$saiFileIn,$fastqFileIn,$readGroupLine,$option_prog{'bwa samse'});
     
 	bwa::bwaMem ($samFileOut,$refFastaFileIn, $forwardFastqFileIn,$reverseFastqFileIn, $readGroupLine,$option_prog{'bwa mem'});
+
+	bwa::bwaSw ($samFileOut,$refFastaFileIn, $forwardFastqFileIn,$reverseFastqFileIn, $option_prog{'bwa sw'});
 
 =head1 DESCRIPTION
 
@@ -286,6 +335,11 @@ The BWA-MEM algorithm performs local alignment. It may produce multiple primary 
 It takes at least three (for single) or four (for pair) arguments: the name of the database indexed, the name of the fastq file(s), the name of the output file of this module ".sam"
 The penultimate arguement is the read group information
 The last argument is the options of bwa mem, for more informations see http://bio-bwa.sourceforge.net/bwa.shtml
+
+=head3 bwa::bwaSw
+
+Align query sequences with the BWA-SW algorithm?.
+
 
 
 =head1 AUTHORS

@@ -15,6 +15,9 @@ MANDATORY=reference
 
 $bwaMem
 IN=fastq,fasta
+
+$bwaSw
+IN=fastq,fasta
 OUT=sam
 MANDATORY=reference
 
