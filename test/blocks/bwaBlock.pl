@@ -49,7 +49,7 @@ my $dataFastq="$toggle/data/testData/fastq/pairedTwoIndividusIrigin";
 
 
 print "\n\n#################################################\n";
-print "#### TEST BWWA bwaSw\n";
+print "#### TEST BWA bwaSw\n";
 print "#################################################\n";
 
 # Remove files and directory created by previous test
