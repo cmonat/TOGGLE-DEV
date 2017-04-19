@@ -19,10 +19,11 @@
 \BOOKMARK [1][-]{section.3.5}{The test}{chapter.3}% 19
 \BOOKMARK [2][-]{subsection.3.5.1}{Basic structure of the test file}{section.3.5}% 20
 \BOOKMARK [2][-]{subsection.3.5.2}{Precise description of test behaviour in TOGGLE}{section.3.5}% 21
-\BOOKMARK [0][-]{chapter.4}{Creating a new block of code}{}% 22
-\BOOKMARK [1][-]{section.4.1}{Already declared variables and other standard stuff}{chapter.4}% 23
-\BOOKMARK [1][-]{section.4.2}{Text block}{chapter.4}% 24
-\BOOKMARK [1][-]{section.4.3}{Indicating the input and output}{chapter.4}% 25
-\BOOKMARK [1][-]{section.4.4}{Providing the correct nomenclature}{chapter.4}% 26
-\BOOKMARK [1][-]{section.4.5}{Last but not least}{chapter.4}% 27
-\BOOKMARK [0][-]{appendix.A}{Licence}{}% 28
+\BOOKMARK [2][-]{subsection.3.5.3}{Launching the test individually and add it to allTestModules.sh}{section.3.5}% 22
+\BOOKMARK [0][-]{chapter.4}{Creating a new block of code}{}% 23
+\BOOKMARK [1][-]{section.4.1}{Already declared variables and other standard stuff}{chapter.4}% 24
+\BOOKMARK [1][-]{section.4.2}{Text block}{chapter.4}% 25
+\BOOKMARK [1][-]{section.4.3}{Indicating the input and output}{chapter.4}% 26
+\BOOKMARK [1][-]{section.4.4}{Providing the correct nomenclature}{chapter.4}% 27
+\BOOKMARK [1][-]{section.4.5}{Last but not least}{chapter.4}% 28
+\BOOKMARK [0][-]{appendix.A}{Licence}{}% 29

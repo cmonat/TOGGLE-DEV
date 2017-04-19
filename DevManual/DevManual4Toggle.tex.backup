@@ -498,9 +498,9 @@ Tests are important to avoid code regressions and ensure thus a high-quality cod
 Five steps are always tested in TOGGLE tests:
 
 \begin{enumerate}
- \item Can the module be used ?
- \item Can the function be called ?
- \item Does the function run ?
+ \item Can the module be used ? 
+ \item Can the function be called ? 
+ \item Does the function run ? 
  \item Does the function return the good file list ?
  \item Does the function return the expected resulting file ?
 \end{enumerate}
@@ -622,6 +622,26 @@ You have to create the test file for your module in the \textbf{test/modules} di
   
 \end{lstlisting}
 
+\subsection{Precise description of test behaviour in TOGGLE}
+
+So, if we check the 5 steps
+
+\begin{enumerate}
+ \item Can the module be used ? \\
+      \texttt{use\_ok('samTools') or exit;}
+ \item Can the function be called ? \\
+      \texttt{can\_ok( 'samTools','samToolsSort');}
+ \item Does the function run ? \\
+      \texttt{is(samTools::samToolsIndex(\$bamFile),1,'samTools::samToolsIndex');}
+ \item Does the function return the good file list ?\\
+      \texttt{is\_deeply(@observedOutput,@expectedOutput,'samTools::samToolsSort - output list');}
+ \item Does the function return the expected resulting file ?
+      \texttt{is(\$observedMD5sum,\$expectedMD5sum,'samTools::samToolsSort - output structure');}
+\end{enumerate}
+
+\subsection{Launching the test individually and add it to allTestModules.sh}
+
+You can launch the test using the command \texttt{prove -v samTools\_test.t}. It will invoke the \textit{Perl Test} framework and signal you if your test is working or not. 
 
 
 \chapter{Creating a new block of code}
