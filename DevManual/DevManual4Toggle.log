@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.5.24)  19 APR 2017 10:53
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.5.24)  19 APR 2017 11:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -662,7 +662,7 @@ LaTeX Info: Redefining \nameref on input line 79.
 
 \c@lstlisting=\count120
 
-<images/toggleLogo.png, id=112, 136.8312pt x 31.21295pt>
+<images/toggleLogo.png, id=116, 136.8312pt x 31.21295pt>
 File: images/toggleLogo.png Graphic file (type png)
 
 <use images/toggleLogo.png>
@@ -734,7 +734,7 @@ Overfull \hbox (53.99884pt too wide) in paragraph at lines 163--163
 .git branchName[] 
  []
 
-<images/toggleLogoSmall.png, id=169, 61.6704pt x 14.16588pt>
+<images/toggleLogoSmall.png, id=174, 61.6704pt x 14.16588pt>
 File: images/toggleLogoSmall.png Graphic file (type png)
 
 <use images/toggleLogoSmall.png>
@@ -813,7 +813,7 @@ File: images/toggleLogoSmall.png Graphic file (type png)
 Package pdftex.def Info: images/toggleLogoSmall.png used on input line 492.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
  [11]
-Overfull \hbox (396.49841pt too wide) in paragraph at lines 515--516
+Overfull \hbox (379.84845pt too wide) in paragraph at lines 515--516
 [][][][] 
  []
 
@@ -822,13 +822,13 @@ File: images/toggleLogoSmall.png Graphic file (type png)
 Package pdftex.def Info: images/toggleLogoSmall.png used on input line 536.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
  [12]
-Overfull \hbox (396.49841pt too wide) in paragraph at lines 543--545
+Overfull \hbox (379.84845pt too wide) in paragraph at lines 544--546
 [][][][] 
  []
 
 File: images/toggleLogoSmall.png Graphic file (type png)
 <use images/toggleLogoSmall.png>
-Package pdftex.def Info: images/toggleLogoSmall.png used on input line 573.
+Package pdftex.def Info: images/toggleLogoSmall.png used on input line 570.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
  [13]
 LaTeX Font Info:    Try loading font information for OMS+lmss on input line 589
@@ -841,23 +841,44 @@ LaTeX Font Warning: Font shape `OMS/lmss/m/n' undefined
 (Font)              for symbol `textasteriskcentered' on input line 589.
 
 
-Overfull \hbox (202.24884pt too wide) in paragraph at lines 598--599
+Overfull \hbox (202.24884pt too wide) in paragraph at lines 599--600
 [][][][] 
  []
 
 
-Overfull \hbox (202.24884pt too wide) in paragraph at lines 600--602
+Overfull \hbox (202.24884pt too wide) in paragraph at lines 601--603
 [][][][] 
  []
 
 File: images/toggleLogoSmall.png Graphic file (type png)
 <use images/toggleLogoSmall.png>
-Package pdftex.def Info: images/toggleLogoSmall.png used on input line 609.
+Package pdftex.def Info: images/toggleLogoSmall.png used on input line 607.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
  [14]
+Overfull \hbox (26.49902pt too wide) in paragraph at lines 634--636
+\T1/lmtt/m/n/10 is(samTools::samToolsIndex($bamFile),1,'samTools::samToolsIndex
+'); 
+ []
+
+
+Overfull \hbox (21.24904pt too wide) in paragraph at lines 636--638
+\T1/lmtt/m/n/10 is_deeply(@observedOutput,@expectedOutput,'samTools::samToolsSo
+rt
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 638--640
+[]\T1/lmr/m/n/10 Does the func-tion re-turn the ex-pected re-sult-ing file ?
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 638--640
+\T1/lmtt/m/n/10 is($observedMD5sum,$expectedMD5sum,'samTools::samToolsSort
+ []
+
 File: images/toggleLogoSmall.png Graphic file (type png)
- <use images/toggleLogoSmall.png>
-Package pdftex.def Info: images/toggleLogoSmall.png used on input line 626.
+<use images/toggleLogoSmall.png>
+Package pdftex.def Info: images/toggleLogoSmall.png used on input line 644.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
  [15]
 Chapter 4.
@@ -866,69 +887,69 @@ Chapter 4.
 ]
 File: images/toggleLogoSmall.png Graphic file (type png)
  <use images/toggleLogoSmall.png>
-Package pdftex.def Info: images/toggleLogoSmall.png used on input line 693.
+Package pdftex.def Info: images/toggleLogoSmall.png used on input line 711.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
  [17]
-Underfull \hbox (badness 10000) in paragraph at lines 709--710
+Underfull \hbox (badness 10000) in paragraph at lines 727--728
 []\T1/lmr/m/n/10 The trans-for-ma-tion/-cor-rec-tion is en-sured by the
  []
 
 File: images/toggleLogoSmall.png Graphic file (type png)
 <use images/toggleLogoSmall.png>
-Package pdftex.def Info: images/toggleLogoSmall.png used on input line 735.
+Package pdftex.def Info: images/toggleLogoSmall.png used on input line 753.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
  [18]
-Overfull \hbox (53.99884pt too wide) in paragraph at lines 771--771
+Overfull \hbox (53.99884pt too wide) in paragraph at lines 789--789
 []    \T1/lmtt/m/n/10 git push https://github.com/SouthGreenPlatform/TOGGLE-DEV
 .git branchName[] 
  []
 
 File: images/toggleLogoSmall.png Graphic file (type png)
 <use images/toggleLogoSmall.png>
-Package pdftex.def Info: images/toggleLogoSmall.png used on input line 776.
+Package pdftex.def Info: images/toggleLogoSmall.png used on input line 794.
 (pdftex.def)             Requested size: 28.45274pt x 6.53561pt.
  [19]
 Appendix A.
-<images/cclarge.png, id=621, 385.44pt x 385.44pt>
+<images/cclarge.png, id=632, 385.44pt x 385.44pt>
 File: images/cclarge.png Graphic file (type png)
  <use images/cclarge.png>
-Package pdftex.def Info: images/cclarge.png used on input line 779.
+Package pdftex.def Info: images/cclarge.png used on input line 797.
 (pdftex.def)             Requested size: 96.35976pt x 96.35976pt.
 
-<images/bylarge.png, id=622, 385.44pt x 385.44pt>
+<images/bylarge.png, id=633, 385.44pt x 385.44pt>
 File: images/bylarge.png Graphic file (type png)
  <use images/bylarge.png>
-Package pdftex.def Info: images/bylarge.png used on input line 780.
+Package pdftex.def Info: images/bylarge.png used on input line 798.
 (pdftex.def)             Requested size: 96.35976pt x 96.35976pt.
 
-<images/salarge.png, id=623, 385.44pt x 385.44pt>
+<images/salarge.png, id=634, 385.44pt x 385.44pt>
 File: images/salarge.png Graphic file (type png)
  <use images/salarge.png>
-Package pdftex.def Info: images/salarge.png used on input line 781.
+Package pdftex.def Info: images/salarge.png used on input line 799.
 (pdftex.def)             Requested size: 96.35976pt x 96.35976pt.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 795.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 813.
 
 [20
 
  <./images/cclarge.png> <./images/bylarge.png> <./images/salarge.png>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 795.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 813.
 
 (./DevManual4Toggle.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 795.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 795.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 813.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 813.
 Package rerunfilecheck Info: File `DevManual4Toggle.out' has not changed.
-(rerunfilecheck)             Checksum: 3D3E52B28C38BC8A35F043B4E83528FC;2042.
+(rerunfilecheck)             Checksum: 334B90031D2038D9BC0E152D07D98BDF;2143.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 795.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 813.
  ) 
 Here is how much of TeX's memory you used:
- 8909 strings out of 493029
- 124350 string characters out of 6136234
- 384259 words of memory out of 5000000
- 11898 multiletter control sequences out of 15000+600000
+ 8914 strings out of 493029
+ 124401 string characters out of 6136234
+ 383259 words of memory out of 5000000
+ 11896 multiletter control sequences out of 15000+600000
  66843 words of font info for 49 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  32i,15n,43p,437b,2060s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -942,10 +963,10 @@ ts/type1/public/lm/lmr17.pfb></usr/share/texmf/fonts/type1/public/lm/lmr5.pfb><
 /public/lm/lmss9.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy9.pfb></usr/sh
 are/texmf/fonts/type1/public/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public
 /lm/lmtt10.pfb>
-Output written on DevManual4Toggle.pdf (21 pages, 374095 bytes).
+Output written on DevManual4Toggle.pdf (21 pages, 375798 bytes).
 PDF statistics:
- 763 PDF objects out of 1000 (max. 8388607)
- 710 compressed objects within 8 object streams
- 418 named destinations out of 1000 (max. 500000)
- 242 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 775 PDF objects out of 1000 (max. 8388607)
+ 722 compressed objects within 8 object streams
+ 425 named destinations out of 1000 (max. 500000)
+ 250 words of extra memory for PDF output out of 10000 (max. 10000000)
 

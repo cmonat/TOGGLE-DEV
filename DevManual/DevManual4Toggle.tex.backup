@@ -505,16 +505,16 @@ Five steps are always tested in TOGGLE tests:
  \item Does the function return the expected resulting file ?
 \end{enumerate}
 
-You have to create a test file corresponding to your module file in the \textbf{test/modules} directory, named such as \textbf{module_test.t}. Thus in the current example, the test file will be \textbf{test/modules/samTools_test.t}.
+You have to create the test file for your module in the \textbf{test/modules} directory, named such as \textbf{module\_test.t}. Thus in the current example, the test file will be \textbf{test/modules/samTools\_test.t}.
 
-\subsection{Basic structure of a test file}
+\subsection{Basic structure of the test file}
 
 \begin{lstlisting}
   #!/usr/bin/perl
 
-  ###################################################################################################################################
+  ################################################################################################################################
   #
-  # Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
+  # Copyright 2014-2017 IRD-CIRAD-INRA-ADNid-YOUR INSTITUTE
   #
   # This program is free software; you can redistribute it and/or modify
   # it under the terms of the GNU General Public License as published by
@@ -535,20 +535,20 @@ You have to create a test file corresponding to your module file in the \textbf{
   # You should have received a copy of the CeCILL-C license with this program.
   #If not see <http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.txt>
   #
-  # Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
+  # Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions, to ADNid for v2 and latter versions, to INRA for v3 and latter versions and YOUR INSTITUTE for the current and latter versions
   # Version 1 written by Cecile Monat, Ayite Kougbeadjo, Christine Tranchant, Cedric Farcy, Mawusse Agbessi, Maryline Summo, and Francois Sabot
   # Version 2 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Enrique Ortega-Abboud, Julie Orjuela-Bouniol, Sebastien Ravel, Souhila Amanzougarene, and Francois Sabot
-  # Version 3 written by Cecile Monat, Christine Tranchant, Laura Helou, Abdoulaye Diallo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
+  # Version 3 written by Cecile Monat, Christine Tranchant, Laura Helou, Abdoulaye Diallo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot 
+  # Current version written by YOUR NAME and v3 authors
   #
-  ###################################################################################################################################
+  ################################################################################################################################
 
   #Will test if samTools module work correctly works correctly
   use strict;
   use warnings;
 
-  use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
+  use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed to the true number of test instead of 'no_plan'.
   use Test::Deep;
-  use Data::Dumper;
   use lib qw(../../modules/);
 
   ########################################
@@ -591,33 +591,33 @@ You have to create a test file corresponding to your module file in the \textbf{
 
   ########################################
   #Identification and linkage to external data, such as reference file, if any
+  # Data for tests and other references are in $toggle/data folder.
   ########################################
   
-  #No need here
-  
+  my $bamFile = "$toggle/data/testData/samBam/oneBamUnsorted/unsorted.bam";
   
   ################################################################################################
   ##Samtools sort
   ################################################################################################
 
   #Output file
-  $bamFileOut = "RC3.SAMTOOOLSSORT.bam";
+  my $bamFileOut = "sorted.bam";
 
   #execution test
   is(samTools::samToolsSort($bamFile, $bamFileOut),1,'samTools::samToolsSort');
 
   # expected output test
-  $observedOutput = `ls`;
-  @observedOutput = split /\n/,$observedOutput;
-  @expectedOutput = ('individuSoft.txt','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSSORT.bam.bai','RC3.SAMTOOLSVIEW.bam','RC3.SAMTOOOLSSORT.bam','Reference.fasta','Reference.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+  my $observedOutput = `ls`;
+  my @observedOutput = split /\n/,$observedOutput;
+  my @expectedOutput = ('individuSoft.txt','samTools_TEST_log.e','samTools_TEST_log.o','sorted.bam','unsorted.bam');
 
   is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsSort - output list');
 
   # expected output structure
-  $expectedMD5sum = "c5db29f185507f5433f0c08163a2dc57";
-  $observedMD5sum=`md5sum RC3.SAMTOOOLSSORT.bam`;# structure of the test file
-  @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
-  $observedMD5sum = $withoutName[0];       # just to have the md5sum result
+  my $expectedMD5sum = "c5db29f185507f5433f0c08163a2dc57";
+  my $observedMD5sum=`md5sum sorted.bam`;# structure of the test file
+  my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
+  my $observedMD5sum = $withoutName[0];       # just to have the md5sum result
   is($observedMD5sum,$expectedMD5sum,'samTools::samToolsSort - output structure');
   
 \end{lstlisting}

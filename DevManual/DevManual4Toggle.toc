@@ -19,6 +19,7 @@
 \contentsline {subsection}{\numberline {3.4.2}TIPS}{11}{subsection.3.4.2}
 \contentsline {section}{\numberline {3.5}The test}{12}{section.3.5}
 \contentsline {subsection}{\numberline {3.5.1}Basic structure of the test file}{12}{subsection.3.5.1}
+\contentsline {subsection}{\numberline {3.5.2}Precise description of test behaviour in TOGGLE}{15}{subsection.3.5.2}
 \contentsline {chapter}{\numberline {4}Creating a new block of code}{16}{chapter.4}
 \contentsline {section}{\numberline {4.1}Already declared variables and other standard stuff}{16}{section.4.1}
 \contentsline {section}{\numberline {4.2}Text block}{17}{section.4.2}
