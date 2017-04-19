@@ -489,10 +489,139 @@ A \textbf{perlDoc} information has to be added at the end of the module, after t
 
 Generally, the fastest and easiest way to create new functions is to copy an existing one (closely related) and to modify it.
 
+\newpage
 
 \section{The test}
 
-I have to fill this part....
+Tests are important to avoid code regressions and ensure thus a high-quality code.
+
+Five steps are always tested in TOGGLE tests:
+
+\begin{enumerate}
+ \item Can the module be used ?
+ \item Can the function be called ?
+ \item Does the function run ?
+ \item Does the function return the good file list ?
+ \item Does the function return the expected resulting file ?
+\end{enumerate}
+
+You have to create the test file for your module in the \textbf{test/modules} directory, named such as \textbf{module\_test.t}. Thus in the current example, the test file will be \textbf{test/modules/samTools\_test.t}.
+
+\subsection{Basic structure of the test file}
+
+\begin{lstlisting}
+  #!/usr/bin/perl
+
+  ################################################################################################################################
+  #
+  # Copyright 2014-2017 IRD-CIRAD-INRA-ADNid-YOUR INSTITUTE
+  #
+  # This program is free software; you can redistribute it and/or modify
+  # it under the terms of the GNU General Public License as published by
+  # the Free Software Foundation; either version 3 of the License, or
+  # (at your option) any later version.
+  #
+  # This program is distributed in the hope that it will be useful,
+  # but WITHOUT ANY WARRANTY; without even the implied warranty of
+  # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  # GNU General Public License for more details.
+  #
+  # You should have received a copy of the GNU General Public License
+  # along with this program; if not, see <http://www.gnu.org/licenses/> or
+  # write to the Free Software Foundation, Inc.,
+  # 51 Franklin Street, Fifth Floor, Boston,
+  # MA 02110-1301, USA.
+  #
+  # You should have received a copy of the CeCILL-C license with this program.
+  #If not see <http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.txt>
+  #
+  # Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions, to ADNid for v2 and latter versions, to INRA for v3 and latter versions and YOUR INSTITUTE for the current and latter versions
+  # Version 1 written by Cecile Monat, Ayite Kougbeadjo, Christine Tranchant, Cedric Farcy, Mawusse Agbessi, Maryline Summo, and Francois Sabot
+  # Version 2 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Enrique Ortega-Abboud, Julie Orjuela-Bouniol, Sebastien Ravel, Souhila Amanzougarene, and Francois Sabot
+  # Version 3 written by Cecile Monat, Christine Tranchant, Laura Helou, Abdoulaye Diallo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot 
+  # Current version written by YOUR NAME and v3 authors
+  #
+  ################################################################################################################################
+
+  #Will test if samTools module work correctly works correctly
+  use strict;
+  use warnings;
+
+  use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed to the true number of test instead of 'no_plan'.
+  use Test::Deep;
+  use lib qw(../../modules/);
+
+  ########################################
+  #use of samtools modules ok
+  ########################################
+  use_ok('localConfig') or exit; #Test if you can use the module localConfig.pm
+  use_ok('samTools') or exit; #Test if you can use the module samTools.pm
+
+  can_ok( 'samTools','samToolsSort'); #Test if you can use the function samToolsSort from the samTools.pm module
+
+  use localConfig;
+  use samTools;
+  
+  #########################################
+  #Remove files and directory created by previous test
+  #########################################
+  my $testingDir="$toggle/dataTest/samToolsTestDir";
+  my $cleaningCmd="rm -Rf $testingDir"; 
+  system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+
+  ########################################
+  #Creation of test directory
+  ########################################
+  my $makeDirCmd = "mkdir $testingDir";
+  system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
+  chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
+
+  #######################################
+  #Creating the IndividuSoft.txt file
+  #######################################
+  my $creatingCmd="echo \"samTools\nTEST\" > individuSoft.txt";
+  system($creatingCmd) and die ("ERROR: $0 : Cannot create the individuSoft.txt file with the command $creatingCmd\n$!\n");
+
+  #######################################
+  #Cleaning the logs for the test
+  #######################################
+  $cleaningCmd="rm -Rf samTools_TEST_log.*";
+  system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCmd \n$!\n");
+
+  ########################################
+  #Identification and linkage to external data, such as reference file, if any
+  # Data for tests and other references are in $toggle/data folder.
+  ########################################
+  
+  my $bamFile = "$toggle/data/testData/samBam/oneBamUnsorted/unsorted.bam";
+  
+  ################################################################################################
+  ##Samtools sort
+  ################################################################################################
+
+  #Output file
+  my $bamFileOut = "sorted.bam";
+
+  #execution test
+  is(samTools::samToolsSort($bamFile, $bamFileOut),1,'samTools::samToolsSort');
+
+  # expected output test
+  my $observedOutput = `ls`;
+  my @observedOutput = split /\n/,$observedOutput;
+  my @expectedOutput = ('individuSoft.txt','samTools_TEST_log.e','samTools_TEST_log.o','sorted.bam','unsorted.bam');
+
+  is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsSort - output list');
+
+  # expected output structure
+  my $expectedMD5sum = "c5db29f185507f5433f0c08163a2dc57";
+  my $observedMD5sum=`md5sum sorted.bam`;# structure of the test file
+  my @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
+  my $observedMD5sum = $withoutName[0];       # just to have the md5sum result
+  is($observedMD5sum,$expectedMD5sum,'samTools::samToolsSort - output structure');
+  
+\end{lstlisting}
+
 
 
 \chapter{Creating a new block of code}

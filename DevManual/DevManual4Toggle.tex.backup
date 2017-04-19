@@ -247,51 +247,50 @@ The \texttt{use} lines are also mandatory to have access to the \texttt{toolbox}
 Here is an example of a currently developed function
 \sloppy
 \begin{lstlisting}[numbers=left]
-##BWA SW
-#Generate alignments in the SAM format.
-#BWA-SW, 
-sub bwaSw 
+##SAMTOOLS SORT
+#Sort alignments by leftmost coordinates.
+sub samToolsSort
 {
-    my($samFileOut,$refFastaFileIn, $forwardFastqFileIn,$reverseFastqFileIn,$optionsHachees)=@_;
-    my $options="";
-    if ($optionsHachees)
-    {
-        $options=toolbox::extractOptions($optionsHachees);		##Get given options
-    }
-    
-    if ((toolbox::sizeFile($forwardFastqFileIn)==1) and not (defined $reverseFastqFileIn)) 
-    {
-	my $command="$bwa bwasw $options $refFastaFileIn $forwardFastqFileIn   > $samFileOut";		# command line
-        toolbox::exportLog("INFOS: bwa::bwaSw : $command\n",1);
-
-        if (toolbox::run($command)==1)
-        {
-            return 1;
-        }
-        else
-        {
-            toolbox::exportLog("ERROR: bwa::bwaSw : ABORTED\n",0);
-        }
-    }
-    elsif ((toolbox::sizeFile($forwardFastqFileIn)==1) and (toolbox::sizeFile($reverseFastqFileIn)==1))
-    {
-        
-	my $command="$bwa bwasw $options $refFastaFileIn $forwardFastqFileIn $reverseFastqFileIn > $samFileOut";		# command line
-        
-        if (toolbox::run($command)==1)
-        {
-            return 1;
-        }
-        else
-        {
-            toolbox::exportLog("ERROR: bwa::bwaSw : ABORTED\n",0);
-        }
-    }
-    else
-    {
-       toolbox::exportLog("ERROR: bwa::bwaSw : Problem with the files $refFastaFileIn, $forwardFastqFileIn or/and $reverseFastqFileIn\n",0);
-       return 0;
-    }                                                                                                                              
+     my($bamFileIn,$bamFileOut,$optionsHachees)=@_;
+     if (toolbox::sizeFile($bamFileIn)==1)
+     { ##Check if entry file exist and is not empty
+          
+          #Check if the format is correct
+          if (checkFormat::checkFormatSamOrBam($bamFileIn)==0)
+          {#The file is not a BAM/SAM file
+               toolbox::exportLog("ERROR: samTools::samToolsSort : The file $bamFileIn is not a SAM/BAM file\n",0);
+               return 0;
+          }
+          
+          my $options="";
+          
+          if ($optionsHachees)
+          {
+               $options=toolbox::extractOptions($optionsHachees);
+          }
+          
+          #The current samtools sort version requires the -T option, ie temp prefix
+          my $tempPrefix = $bamFileOut;
+          $tempPrefix =~ s/\.bam/_temp/;
+          
+          my $command=$samtools." sort ".$options." -o ".$bamFileOut." -T ".$tempPrefix." ".$bamFileIn;
+          
+          #Execute command
+          if(toolbox::run($command)==1)
+          {
+               return 1;#Command Ok
+          }
+          else
+          {
+               toolbox::exportLog("ERROR: samTools::samToolsSort : Uncorrectly done\n",0);
+               return 0;#Command not Ok
+          }
+     }
+     else
+     {
+        toolbox::exportLog("ERROR: samTools::samToolsSort : The file $bamFileIn is uncorrect\n",0);
+        return 0;#File not Ok
+     }
 }
 
 \end{lstlisting}
@@ -367,9 +366,10 @@ Let's come back to our example:
 
 ##SAMTOOLS SORT
 #Sort alignments by leftmost coordinates.
-sub samToolsSort{
+sub samToolsSort
+{
      ...
-     }
+}
 
 \end{lstlisting}
 
@@ -378,7 +378,7 @@ The \texttt{sub} is preceded by commentaries about the function and what it does
 \begin{lstlisting}[numbers=left]
 
 ...
-     my($bamFileIn,$optionsHachees)=@_;
+      my($bamFileIn,$bamFileOut,$optionsHachees)=@_;
          
 ...
 
@@ -389,15 +389,20 @@ input file and options are recovered through references.
 
 \begin{lstlisting}[numbers=left]
 
-     if (toolbox::sizeFile($bamFileIn)==1){ ##Check if entry file exist and is not empty
+     if (toolbox::sizeFile($bamFileIn)==1)
+     { ##Check if entry file exist and is not empty
           
           #Check if the format is correct
-          if (toolbox::checkSamOrBamFormat($bamFileIn)==0) {#The file is not a BAM/SAM file
+          if (checkFormat::checkFormatSamOrBam($bamFileIn)==0)
+          {#The file is not a BAM/SAM file
                toolbox::exportLog("ERROR: samTools::samToolsSort : The file $bamFileIn is not a SAM/BAM file\n",0);
                return 0;
           }
-          MY CORE COMMAND
-     }else{
+          
+         MY CORE COMMAND
+     }
+     else
+     {
         toolbox::exportLog("ERROR: samTools::samToolsSort : The file $bamFileIn is uncorrect\n",0);
         return 0;#File not Ok
      }
@@ -409,18 +414,20 @@ We check if the  input file exists (\texttt{toolbox::sizeFile}) and if the file 
 If any error appears (empty file, wrong format), the script is stopped and logs filled using the \texttt{toolbox::exportLog function}.
 
 \begin{lstlisting}
-          my $bamPath=toolbox::extractPath($bamFileIn);
-          my $bamFileName=toolbox::extractName($bamFileIn).".SAMTOOLSSORT";
-          my $bamFileOut = $bamPath.$bamFileName;
-          my $options="";
-          if ($optionsHachees) {
+           my $options="";
+          
+          if ($optionsHachees)
+          {
                $options=toolbox::extractOptions($optionsHachees);
           }
-          my $command=$samtools." sort ".$options." ".$bamFileIn." ".$bamFileOut;
+          
+          #The current samtools sort version requires the -T option, ie temp prefix
+          my $tempPrefix = $bamFileOut;
+          $tempPrefix =~ s/\.bam/_temp/;
+          
+          my $command=$samtools." sort ".$options." -o ".$bamFileOut." -T ".$tempPrefix." ".$bamFileIn;
           
 \end{lstlisting}
-
-The \texttt{toolbox::extractPath} function allows to pickup file name without extension (similar to \texttt{basename} bash command). Using this shorter name, we can create an output name if required.
 
 The \texttt{toolbox::extractOptions} function will create a text version of the hash containing the options for the given tool (first argument). A second optional argument can be provided to specify the separator between the option name and its value. Thus if the second argument is provided as ``='', the option output would be ``-d=1''. Either, in standard it will be ``-d 1'' (standard is space).
 
@@ -428,26 +435,193 @@ The command line can thus be created.
 
 \begin{lstlisting}
           #Execute command
-          if(toolbox::run($command)==1){
-               toolbox::exportLog("INFOS: samTools::samToolsSort : Correctly done\n",1);
+          if(toolbox::run($command)==1)
+          {
                return 1;#Command Ok
-          }else{
-                    toolbox::exportLog("ERROR: samTools::samToolsSort : Uncorrectly done\n",0);
-                    return 0;#Command not Ok
-               }
+          }
+          else
+          {
+               toolbox::exportLog("ERROR: samTools::samToolsSort : Uncorrectly done\n",0);
+               return 0;#Command not Ok
+          }
 \end{lstlisting}
 
 Once we have created the command, we can send it to \texttt{toolbox::run}, and report the output state (O, 1 or 2).
+
+\subsection{Adding a perlDoc}
+
+A \textbf{perlDoc} information has to be added at the end of the module, after the\textit{1;}:
+
+\begin{lstlisting}
+          =head1 NAME
+	  
+	   Package I<samtools> 
+
+	  =head1 SYNOPSIS
+
+	  This package contains the whole modules for the SAMtools software
+
+	  =head1 DESCRIPTION
+
+	  Package SAMtools (Li et al, 2009, http://http://www.htslib.org/ ) is a software package for working on SAM and BAM files (sorting, selection, merging...)
+
+	  =head2 Functions
+
+	  =over 4
+
+	  =item samToolsSort (Sorts in different ways a BAM file: coordinates, random, reads)
+
+	  =back
+
+	  =head1 AUTHORS
+
+	  Intellectual property belongs to IRD, CIRAD, YOUR INSTITURE and South Green developpement plateform 
+	  Written by Cecile Monat, Ayite Kougbeadjo, Marilyne Summo, Cedric Farcy, Mawusse Agbessi, Christine Tranchant, YOUR NAME and Francois Sabot
+
+	  =head1 SEE ALSO
+
+	  L<http://toggle.southgreen.fr/>		# SOUTH GREEN TOGGLE WEBSITE
+
+	  =cut
+\end{lstlisting}
 
 \subsection{TIPS}
 
 Generally, the fastest and easiest way to create new functions is to copy an existing one (closely related) and to modify it.
 
-
+\newpage
 
 \section{The test}
 
-I have to fill this part....
+Tests are important to avoid code regressions and ensure thus a high-quality code.
+
+Five steps are always tested in TOGGLE tests:
+
+\begin{enumerate}
+ \item Can the module be used ?
+ \item Can the function be called ?
+ \item Does the function run ?
+ \item Does the function return the good file list ?
+ \item Does the function return the expected resulting file ?
+\end{enumerate}
+
+You have to create a test file corresponding to your module file in the \textbf{test/modules} directory, named such as \textbf{module_test.t}. Thus in the current example, the test file will be \textbf{test/modules/samTools_test.t}.
+
+\subsection{Basic structure of a test file}
+
+\begin{lstlisting}
+  #!/usr/bin/perl
+
+  ###################################################################################################################################
+  #
+  # Copyright 2014-2017 IRD-CIRAD-INRA-ADNid
+  #
+  # This program is free software; you can redistribute it and/or modify
+  # it under the terms of the GNU General Public License as published by
+  # the Free Software Foundation; either version 3 of the License, or
+  # (at your option) any later version.
+  #
+  # This program is distributed in the hope that it will be useful,
+  # but WITHOUT ANY WARRANTY; without even the implied warranty of
+  # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  # GNU General Public License for more details.
+  #
+  # You should have received a copy of the GNU General Public License
+  # along with this program; if not, see <http://www.gnu.org/licenses/> or
+  # write to the Free Software Foundation, Inc.,
+  # 51 Franklin Street, Fifth Floor, Boston,
+  # MA 02110-1301, USA.
+  #
+  # You should have received a copy of the CeCILL-C license with this program.
+  #If not see <http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.txt>
+  #
+  # Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
+  # Version 1 written by Cecile Monat, Ayite Kougbeadjo, Christine Tranchant, Cedric Farcy, Mawusse Agbessi, Maryline Summo, and Francois Sabot
+  # Version 2 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Enrique Ortega-Abboud, Julie Orjuela-Bouniol, Sebastien Ravel, Souhila Amanzougarene, and Francois Sabot
+  # Version 3 written by Cecile Monat, Christine Tranchant, Laura Helou, Abdoulaye Diallo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
+  #
+  ###################################################################################################################################
+
+  #Will test if samTools module work correctly works correctly
+  use strict;
+  use warnings;
+
+  use Test::More 'no_plan'; #Number of tests, to modify if new tests implemented. Can be changed as 'no_plan' instead of tests=>11 .
+  use Test::Deep;
+  use Data::Dumper;
+  use lib qw(../../modules/);
+
+  ########################################
+  #use of samtools modules ok
+  ########################################
+  use_ok('localConfig') or exit; #Test if you can use the module localConfig.pm
+  use_ok('samTools') or exit; #Test if you can use the module samTools.pm
+
+  can_ok( 'samTools','samToolsSort'); #Test if you can use the function samToolsSort from the samTools.pm module
+
+  use localConfig;
+  use samTools;
+  
+  #########################################
+  #Remove files and directory created by previous test
+  #########################################
+  my $testingDir="$toggle/dataTest/samToolsTestDir";
+  my $cleaningCmd="rm -Rf $testingDir"; 
+  system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+
+  ########################################
+  #Creation of test directory
+  ########################################
+  my $makeDirCmd = "mkdir $testingDir";
+  system ($makeDirCmd) and die ("ERROR: $0 : Cannot create the new directory with the command $makeDirCmd\n$!\n");
+  chdir $testingDir or die ("ERROR: $0 : Cannot go into the new directory with the command \"chdir $testingDir\"\n$!\n");
+
+  #######################################
+  #Creating the IndividuSoft.txt file
+  #######################################
+  my $creatingCmd="echo \"samTools\nTEST\" > individuSoft.txt";
+  system($creatingCmd) and die ("ERROR: $0 : Cannot create the individuSoft.txt file with the command $creatingCmd\n$!\n");
+
+  #######################################
+  #Cleaning the logs for the test
+  #######################################
+  $cleaningCmd="rm -Rf samTools_TEST_log.*";
+  system($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous log files with the command $cleaningCmd \n$!\n");
+
+  ########################################
+  #Identification and linkage to external data, such as reference file, if any
+  ########################################
+  
+  #No need here
+  
+  
+  ################################################################################################
+  ##Samtools sort
+  ################################################################################################
+
+  #Output file
+  $bamFileOut = "RC3.SAMTOOOLSSORT.bam";
+
+  #execution test
+  is(samTools::samToolsSort($bamFile, $bamFileOut),1,'samTools::samToolsSort');
+
+  # expected output test
+  $observedOutput = `ls`;
+  @observedOutput = split /\n/,$observedOutput;
+  @expectedOutput = ('individuSoft.txt','RC3.PICARDTOOLSSORT.bam','RC3.PICARDTOOLSSORT.bam.bai','RC3.SAMTOOLSVIEW.bam','RC3.SAMTOOOLSSORT.bam','Reference.fasta','Reference.fasta.fai','samTools_TEST_log.e','samTools_TEST_log.o');
+
+  is_deeply(\@observedOutput,\@expectedOutput,'samTools::samToolsSort - output list');
+
+  # expected output structure
+  $expectedMD5sum = "c5db29f185507f5433f0c08163a2dc57";
+  $observedMD5sum=`md5sum RC3.SAMTOOOLSSORT.bam`;# structure of the test file
+  @withoutName = split (" ", $observedMD5sum);     # to separate the structure and the name of the test file
+  $observedMD5sum = $withoutName[0];       # just to have the md5sum result
+  is($observedMD5sum,$expectedMD5sum,'samTools::samToolsSort - output structure');
+  
+\end{lstlisting}
+
 
 
 \chapter{Creating a new block of code}
