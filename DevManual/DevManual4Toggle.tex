@@ -491,11 +491,14 @@ Generally, the fastest and easiest way to create new functions is to copy an exi
 
 \newpage
 
-\section{The test}
 
-Tests are important to avoid code regressions and ensure thus a high-quality code.
+%% ############### TEST ###############
 
-Five steps are always tested in TOGGLE tests:
+\chapter{The tests}
+
+Tests are important to avoid code regressions and ensure thus a high-quality code.\\
+
+\noindent Five steps are always tested in TOGGLE tests:
 
 \begin{enumerate}
  \item Can the module be used ? 
@@ -505,9 +508,9 @@ Five steps are always tested in TOGGLE tests:
  \item Does the function return the expected resulting file ?
 \end{enumerate}
 
-You have to create the test file for your module in the \textbf{test/modules} directory, named such as \textbf{module\_test.t}. Thus in the current example, the test file will be \textbf{test/modules/samTools\_test.t}.
+\noindent  You have to create the test file for your module in the \textbf{test/modules} directory, named such as \textbf{module\_test.t}. Thus in the current example, the test file will be \textbf{test/modules/samTools\_test.t}.
 
-\subsection{Basic structure of the test file}
+\section{Basic structure of the test file}
 
 \begin{lstlisting}
   #!/usr/bin/perl
@@ -622,7 +625,7 @@ You have to create the test file for your module in the \textbf{test/modules} di
   
 \end{lstlisting}
 
-\subsection{Precise description of test behaviour in TOGGLE}
+\section{Precise description of test behavior in TOGGLE}
 
 So, if we check the 5 steps
 
@@ -639,7 +642,7 @@ So, if we check the 5 steps
       \texttt{is(\$observedMD5sum,\$expectedMD5sum,'samTools::samToolsSort - output structure');}
 \end{enumerate}
 
-\subsection{Launching the test individually and add it to allTestModules.sh}
+\section{Launching the test individually and add it to allTestModules.sh}
 
 You can launch the test using the command \texttt{prove -v samTools\_test.t}. It will invoke the \textit{Perl Test} framework and signal you if your test is working or not. \\
 
@@ -664,75 +667,196 @@ If working, add it for the whole test system in adding the following command at 
 Then launch the complete tests using \texttt{sh allTestModules.sh}.
 
 
+%% ############### BLOCK ###############
 
 \chapter{Creating a new block of code}
-Once the function is created, you can either stand like that, or adding it to the library of bricks we can use in the on the fly pipeline generation... Which is much greater :D
+Once the function and its tests have been created, you can either stand like that, or adding it to the library of bricks we can use in the on the fly pipeline generation... Which is much greater :D
 
 \section{Already declared variables and other standard stuff}
 
-The on the fly version contains a wide range of already declared variables and standard way to know in which step we are. The already declared variables are (in the \emph{startBlock.txt} file):
+The onTheFly version contains a wide range of already global declared variables and internal variables to in a standard way to know in which step we are. The already declared variables are in the \emph{startBlock.txt} file:
+
 \begin{lstlisting}
- #Switch and populating variable
 
-#Standard variables
+# GLOBAL variables declaration
 
-my ($softParameters, $newDir,$stepOrder,$stepName,$fileWithoutExtention,$fastqForward,$fastqReverse,$samFile,$extension,$samFileOut,$shortDirName,$stepF1,$vcfCalled,$vcfOut,$listOfBam,$bamFile,$bamFileOut,$cleanerCommand,$intervalsFile,$replacementCommand);
+##FASTA associated variables
+my $fastaFileIn="NA";
+my $faidxFileOut="NA";
+my $localFastaFileIn = "NA";
 
-#Variable variables
-my ($fastq1,$fastq2,$sam,$bam,$vcf);
-my $fileList=toolbox::readDir($previousDir);
-my $globalAnalysis=0; #to check if all data are to be treated one by one  (0) or in group (1)
+##FASTQ associated variables
+my ($fastqForwardIn, $fastqForwardOut, $fastqReverseIn, $fastqReverseOut)=("NA","NA","NA","NA");
+
+##SAM associated variables
+my ($samFileIn, $samFileOut)=("NA","NA"); #Those variables are to be used for sam standard but also if the block can treat SAM as well as BAM (eg samtools view)
+
+## SAI associated variables
+my ($saiForwardOut, $saiReverseOut)=("NA","NA"); # Use for bwa alnBlock, bwaSampe and bwaSamse
+
+##BAM associated variables
+my ($bamFileIn, $bamFileOut)=("NA","NA");
+my $listOfBam=();
+
+##VCF associated variables
+my ($vcfFileIn,$vcfFileOut)=("NA","NA");
+
+##Intervals/Report associated variables
+my ($intervalsFile,$tableReport,$vcfSnpKnownFile,$depthFileOut);
+
+##MpileUp associated variables
+my ($mpileupOut);
+
+
+## INTERNAL VARIABLES
+
+###Directory and file variables
+my ($newDir, $fileWithoutExtension, $extension, $shortDirName, @dirList);
+### Step variables
+my ($stepF1, $stepOrder, $stepName, $softParameters);
+### Various command variables
+my ($cleanerCommand, $compressorCommand,$replacementCommand);
 
 \end{lstlisting}
 
-In a same way, the current directory is already known, such as the previous one (see \emph{previousBlock.txt} and \emph{afterBlock.txt}).
+In a same way, the current directory is already known, such as the previous one (see \emph{previousBlock.txt} and \emph{afterBlock.txt}). \\
 
-\section{Text block}
+Normally you don't need to change these framework files.
 
-A text block is an implementation of a call to the new function you designed. This code will be used latter by \textit{toggleGenerator.pl} to generate the pipeline scripts. This is a text file, that must be saved in the \emph{onTheFly} folder to be used.
+\section{Create a block}
+
+A block is an implementation of a call to the new function you designed. This code will be used latter by \textit{toggleGenerator.pl} to generate the pipeline scripts. You have to create the block file for your fonction in the \textbf{onTheFly} directory, named such as \textbf{fonctionBlock.txt}. Thus in the current example, the test file will be \textbf{onTheFly/samToolsSortBlock.txt}. \\
 
 Starting with the previous example, let's see what would be the code block associated with
 
 \begin{lstlisting}
-##########################################
+
+#########################################
 # Block for samtools sort
 ##########################################
 
-$samFile=0;
-foreach my $file (@{$fileList}) #Checking the type of files that must be SAM or BAM
+#Correct variable populating
+
+foreach my $file (@{$fileList}) #Checking the type of files that must be BAM
 {
-    if ($file =~ m/sam$|bam$/) # the file type is normally sam of bam
+    if ($file =~ m/bam$/) # the file type is normally bam
     {
-        if ($samFile != 0) # Already a sam of a bam recognized, but more than one in the previous folder
+        if ($bamFileIn ne "NA") # Already a bam recognized, but more than one in the previous folder
         {
-            toolbox::exportLog("ERROR : $0 : there are more than one single SAM/BAM file at $stepName step.\n",0);
+            toolbox::exportLog("ERROR : $0 : there are more than one single BAM file at $stepName step.\n",0);
         }
-        $samFile = $file;
+        else
+        {
+            $bamFileIn = $file;
+        }
     }
 }
 
-if ($samFile eq '0') #No SAM/BAM file found in the previous folder
+if ($bamFileIn eq "NA") #No BAM file found in the previous folder
 {
-    toolbox::exportLog("ERROR : $0 : No SAM/BAM file found in $previousDir at step $stepName.\n",0);
+    toolbox::exportLog("ERROR : $0 : No BAM file found in $previousDir at step $stepName.\n",0);
 }
 
-$softParameters = toolbox::extractHashSoft($optionRef,$stepName);     # recovery of specific parameters of samtools sort
+$softParameters = toolbox::extractHashSoft($optionRef,$stepName);   # recovery of specific parameters of samtools sort
 
-samTools::samToolsSort($samFile,$softParameters);   # Sending to samtools sort function
+$bamFileOut = "$newDir"."/"."$readGroup".".SAMTOOLSSORT.bam";
+samTools::samToolsSort($bamFileIn,$bamFileOut,$softParameters);   # Sending to samtools sort function
 \end{lstlisting}
 
-As you can see many controls and comments are added.
+As you can see many controls and comments are added.\\
 
-The first thing done is the checking of number of input file, as samToolsSort function will allow only one file to be sort at a time. It check also that the previous folder is not an empty one.
-Then it recovers the subhash containing the parameters for samtools sort, if any, and then send the arguments to the function.
+The first thing done is to check the number of input files. As samToolsSort function will sort only one file at a time, it checks also that the previous folder is not an empty one. Then it recovers the subhash containing the parameters for samtools sort and the arguments are sent to the function.\\
 
-As for creating a new function, the easiest way is to copy a related block, to modify it at conveniance then to save it under another name.
+For creating a new function, the easiest way is to copy a related block, to modify it at convenance then to save it under another name.
+
+
+%% ############### TEST DE BLOCK ###############
+\section{Testing a block}
+
+If you block has been created, you need test it. In the \textbf{test/blocks} repertory add the test of your fonction at the end of the file corresponding to the tool. Starting with the previous exemple, let's see the test of the block associated with it : \\
+
+%Creation du TEST de block bwaBlock.pl (ajouter dans allTestBlock.pl)
+
+\noindent Four steps are done in order to test a block  :
+
+\begin{enumerate}
+\item Removing files and directory created by previous test
+\item Creating config file for this test : create an configuration file automatically using the fileConfigurator::createFileConf fonction.
+\item Running TOGGLE for the new fonction
+\item Checking final results by comparing expected and observed files (content and value output)
+\end{enumerate}
+
+
+\begin{lstlisting}
+#####################
+## TOGGLE samtools sortsam
+#####################
+
+#Input data
+my $dataOneBam = "$toggle/data/testData/samBam/oneBamUnsorted/";
+my $dataRefIrigin = "$toggle/data/Bank/referenceIrigin.fasta";
+
+print "\n\n#################################################\n";
+print "#### TEST SAMtools sort / no SGE mode\n";
+print "#################################################\n";
+
+# Remove files and directory created by previous test
+my $testingDir="$toggle/dataTest/samToolsSort-noSGE-Blocks";
+my $cleaningCmd="rm -Rf $testingDir";
+system ($cleaningCmd) and die ("ERROR: $0 : Cannot remove the previous test directory with the command $cleaningCmd \n$!\n");
+
+#Creating config file for this test
+my @listSoft = ("samToolsSort");
+fileConfigurator::createFileConf(\@listSoft,"blockTestConfig.txt");
+
+my $runCmd = "toggleGenerator.pl -c blockTestConfig.txt -d ".$dataOneBam." -r ".$dataRefIrigin." -o ".$testingDir;
+print "\n### Toggle running : $runCmd\n";
+system("$runCmd") and die "#### ERROR : Can't run TOGGLE for samtools sort";
+
+# check final results
+print "\n### TEST Ouput list & content : $runCmd\n";
+my $observedOutput = `ls $testingDir/finalResults`;
+my @observedOutput = split /\n/,$observedOutput;
+my @expectedOutput = ('unsorted.SAMTOOLSSORT.bam');
+
+# expected output test
+is_deeply(\@observedOutput,\@expectedOutput,'toggleGenerator - One Bam (no SGE) sorting list ');
+
+# expected output content
+$observedOutput=`samtools view $testingDir/finalResults/unsorted.SAMTOOLSSORT.bam | head -n 2 | cut -f4`; # We pick up only the position field
+chomp $observedOutput;
+my @position = split /\n/, $observedOutput;
+$observedOutput= 0;
+$observedOutput = 1 if ($position[0] < $position[1]); # the first read is placed before the second one
+is($observedOutput,"1", 'toggleGenerator - One Bam (no SGE) sorting content ');
+\end{lstlisting}
+
+
+\section{Launching the test of block individually and add it to allTestBlock.pl}
+
+You can launch the test of block using the command \texttt{perl  samTools.pl}. It will invoke the \textit{Perl Test} framework and signal you if your test is working or not. \\
+
+If working, add it for the whole test system in adding the following command at the end of the \textbf{\$toggle/test/test/allTestBlock.pl} file:
+
+\begin{lstlisting}
+system("perl $toggle/test/blocks/samtoolsBlock.pl") and warn "ERROR: $0: Cannot run test for samtoolsBlock.pl  \n$!\n";
+\end{lstlisting}
+
+Then launch the complete tests using \texttt{perl allTestBlock.pl}.
+
+
+
+
+
+
+
+%%%% SoftwareFormat convention
 
 \section{Indicating the input and output}
 
-The \emph{softwareFormat.txt} file (root folder) allows the system to verify that the output of the step n are compatible with the input of step n+1.
+The \emph{softwareFormat.txt} file (root folder) allows the system to verify that the output of the step n are compatible with the input of step n+1.\\
 
-It is basically informed in the following way:
+\noindent It is basically informed in the following way:
 
 \begin{verbatim}
  $samToolsSort
@@ -740,7 +864,7 @@ It is basically informed in the following way:
  OUT=SAM,BAM
 \end{verbatim}
 
-Multiple formats are separated by commas.
+\noindent Multiple formats are separated by commas.
 
 \section{Providing the correct nomenclature}
 
