@@ -126,15 +126,15 @@
 
 \chapter{Introduction}
 \section{To whom this manual is addressed}
-The current manual is addressed to new TOGGLE developers, \textit{i.e.} people wanting to develop new tools in the TOGGLE framework.
-If you just want to use already existing TOGGLE bricks, you do not need to read it, you can go directly to the user manual on \href{https://github.com/SouthGreenPlatform/TOGGLE}{the github of the project}.
+The current manual is addressed to new TOGGLE developers, \textit{i.e.} people wanting to implement new tools in the TOGGLE framework.
+If you just want to use already existing TOGGLE functions, you do not need to read it, you can go directly to the user manual on \href{http://toggle.southgreen.fr}{the website of the project}.
 
 \section{General things about the TOGGLE github}
-Developers are required to work on the TOGGLE-dev github, accessible at \url{https://github.com/SouthGreenPlatform/TOGGLE-DEV}.
+Developers are required to work from the TOGGLE-dev github, accessible at \url{https://github.com/SouthGreenPlatform/TOGGLE-DEV}.
 
-\subsection{Preparing your working environment}
+\subsection{Preparing your working environment - Users registred on the TOGGLE-DEV github}
 
-You first have to clone the TOGGLE-DEV current version using the following command
+You first have to clone the TOGGLE-DEV current version using the following commands:
 
 \begin{verbatim}
  #Cloning
@@ -144,7 +144,7 @@ You first have to clone the TOGGLE-DEV current version using the following comma
  cd /path/for/cloning
 \end{verbatim}
 
-Then, create your own development branch using the following commands
+Then, create your own development branch using the following commands:
 
 \begin{verbatim}
  
@@ -167,10 +167,17 @@ This will prevent any regression in the current version and thus allow a reliabl
 Integration of new branchs will be perfomed by power users under request on the github.
 The integration depends on the correct application of the following recommandations, especially tests.
 
+\subsection{Preparing your working environment - Users NOT registred on the TOGGLE-DEV github}
+
+If you have no rights to work on the TOGGLE-DEV github, or you want to change it for your specific usage, please fork the repository using \href{https://help.github.com/articles/fork-a-repo/
+}{the GitHub forking manual}.
+
+
 \section{General things about the conventions and nomenclatures in TOGGLE}
 
-In TOGGLE, the nomenclature is quite the same for all filenames, variables, modules or functions.
-The way we will name a variable representing the output BAM file e.g. is \textbf{bam\underline{O}utput}, thus all in lowercases, upper case being used to separate words. A multiple words function such as the picard-tools CreateSequenceDictionary one will thus be \textbf{picard\underline{T}ools\underline{C}reate\underline{S}equence\underline{D}ictionary}.
+In TOGGLE, the nomenclature is quite the same for all filenames, variables, modules or functions.\\
+The way we will name a variable representing the output BAM file e.g. is \textbf{bam\underline{O}utput}, thus all in lowercases, upper case being used to separate words.\\
+A multiple words function such as the picard-tools CreateSequenceDictionary one will thus be \textbf{picard\underline{T}ools\underline{C}reate\underline{S}equence\underline{D}ictionary}.
 
 
 \chapter{Creating a new module}
@@ -182,14 +189,14 @@ Generally the name is related to the function target (software or format).
 
 \section{Requirements and Declaration}
 
-All modules created for TOGGLE must be structuredas follows, with the same preamble:
+All modules created for TOGGLE must be structured as follows, with the same preamble:
 
 \begin{lstlisting}
 package myName;
 
 ################################################################################################################################
 #
-# Copyright 2014-2015 IRD-CIRAD-INRA-ADNid
+# Copyright 2014-2017 IRD-CIRAD-INRA-ADNid-YOUR INSTITUTE
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -210,10 +217,11 @@ package myName;
 # You should have received a copy of the CeCILL-C license with this program.
 #If not see <http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.txt>
 #
-# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions also for ADNid for v2 and v3 and INRA for v3
+# Intellectual property belongs to IRD, CIRAD and South Green developpement plateform for all versions, to ADNid for v2 and latter versions, to INRA for v3 and latter versions and YOUR INSTITUTE for the current and latter versions
 # Version 1 written by Cecile Monat, Ayite Kougbeadjo, Christine Tranchant, Cedric Farcy, Mawusse Agbessi, Maryline Summo, and Francois Sabot
 # Version 2 written by Cecile Monat, Christine Tranchant, Cedric Farcy, Enrique Ortega-Abboud, Julie Orjuela-Bouniol, Sebastien Ravel, Souhila Amanzougarene, and Francois Sabot
-# Version 3 written by Cecile Monat, Christine Tranchant, Laura Helou, Abdoulaye Diallo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot
+# Version 3 written by Cecile Monat, Christine Tranchant, Laura Helou, Abdoulaye Diallo, Julie Orjuela-Bouniol, Sebastien Ravel, Gautier Sarah, and Francois Sabot 
+# Current version written by YOUR NAME and v3 authors
 #
 ################################################################################################################################
 
@@ -239,36 +247,47 @@ The \texttt{use} lines are also mandatory to have access to the \texttt{toolbox}
 Here is an example of a currently developed function
 \sloppy
 \begin{lstlisting}[numbers=left]
-
 ##SAMTOOLS SORT
 #Sort alignments by leftmost coordinates.
-sub samToolsSort{
-     my($bamFileIn,$optionsHachees)=@_;
-     if (toolbox::sizeFile($bamFileIn)==1){ ##Check if entry file exist and is not empty
+sub samToolsSort
+{
+     my($bamFileIn,$bamFileOut,$optionsHachees)=@_;
+     if (toolbox::sizeFile($bamFileIn)==1)
+     { ##Check if entry file exist and is not empty
           
           #Check if the format is correct
-          if (toolbox::checkSamOrBamFormat($bamFileIn)==0) {#The file is not a BAM/SAM file
+          if (checkFormat::checkFormatSamOrBam($bamFileIn)==0)
+          {#The file is not a BAM/SAM file
                toolbox::exportLog("ERROR: samTools::samToolsSort : The file $bamFileIn is not a SAM/BAM file\n",0);
                return 0;
           }
           
-          my $bamPath=toolbox::extractPath($bamFileIn);
-          my $bamFileName=toolbox::extractName($bamFileIn).".SAMTOOLSSORT";
-          my $bamFileOut = $bamPath.$bamFileName;
           my $options="";
-          if ($optionsHachees) {
+          
+          if ($optionsHachees)
+          {
                $options=toolbox::extractOptions($optionsHachees);
           }
-          my $command=$samtools." sort ".$options." ".$bamFileIn." ".$bamFileOut;
+          
+          #The current samtools sort version requires the -T option, ie temp prefix
+          my $tempPrefix = $bamFileOut;
+          $tempPrefix =~ s/\.bam/_temp/;
+          
+          my $command=$samtools." sort ".$options." -o ".$bamFileOut." -T ".$tempPrefix." ".$bamFileIn;
+          
           #Execute command
-          if(toolbox::run($command)==1){
-               toolbox::exportLog("INFOS: samTools::samToolsSort : Correctly done\n",1);
+          if(toolbox::run($command)==1)
+          {
                return 1;#Command Ok
-          }else{
-                    toolbox::exportLog("ERROR: samTools::samToolsSort : Uncorrectly done\n",0);
-                    return 0;#Command not Ok
-               }
-     }else{
+          }
+          else
+          {
+               toolbox::exportLog("ERROR: samTools::samToolsSort : Uncorrectly done\n",0);
+               return 0;#Command not Ok
+          }
+     }
+     else
+     {
         toolbox::exportLog("ERROR: samTools::samToolsSort : The file $bamFileIn is uncorrect\n",0);
         return 0;#File not Ok
      }
@@ -276,11 +295,9 @@ sub samToolsSort{
 
 \end{lstlisting}
 
-As you can see, the code is quite well structured and commented for a \textit{Perl} code...
+\emph{ALL THE FUNCTIONS MUST BE UNITARY}, \textit{i.e.} the shortest possible.
 
-Moreover, \emph{ALL THE FUNCTIONS MUST UNITARY}, i.e. the shortest possible.
-
-All system calls will be performed throught the \texttt{toolbox::run} function
+All system calls must be performed throught the \texttt{toolbox::run} function
 
 \section{Nomenclature, Indentation and commentaries}
 
@@ -290,7 +307,7 @@ Indentation is mandatory, as well as commentaries.
 
 \section{Basic structure of the function}
 
-A function will be designed as follow:
+A function will be designed as follows:
 \begin{enumerate}
  \item Picking up input data, output data (if any) and options
  \item Verifying the input format, if any
@@ -298,7 +315,7 @@ A function will be designed as follow:
  \item Picking up the options in a text format (using \texttt{toolbox::extractOptions} function
  \item Creating the command line
  \item Sending command line to \texttt{toolbox::run} using a \textit{if}
- \item Sending log to \texttt{toolbox::exportLog} function
+ \item Sending log to \texttt{toolbox::exportLog} function to report errors
 \end{enumerate}
 
 \section{The \texttt{toolbox::exportLog} and \texttt{toolbox::run} functions}
@@ -307,15 +324,7 @@ A function will be designed as follow:
 
 \texttt{toolbox::exportLog} is a intreasic feature in TOGGLE that will fill the various logs all along the pipeline running.
 
-In a basic way, you can send any message to the current logs. INFOS and WARNING messages will not kill the current process, while ERRO will.
-
-To construct a message, please follow the current nomenclature
-
-\begin{description}
- \item [INFOS]: toolbox::exportLog("INFOS: myModule::myFunction : Coffee is ready",1);
- \item [WARNINGS]: toolbox::exportLog("WARNING: myModule::myFunction : Coffee is not ready yet",2);
- \item [ERRORS]: toolbox::exportLog("ERROR: myModule::myFunction : No coffee left!!",0);
-\end{description}
+In a basic way, you can send any message to the current logs. \textbf{INFOS} and \textbf{WARNING} messages will not kill the current process, while \textbf{ERROR} will.
 
 The numerical values at the end of the command arguments represent the state of the command and will send the text to a given log:
 \begin{description}
@@ -323,20 +332,27 @@ The numerical values at the end of the command arguments represent the state of 
  \item [1]: INFOS, will send the text in the output log (log.\underline{o}).
 \end{description}
 
+To construct a message, please follow the current nomenclature:
+
+\begin{description}
+ \item [INFOS]: toolbox::exportLog("INFOS: myModule::myFunction : Coffee is ready",1);
+ \item [WARNINGS]: toolbox::exportLog("WARNING: myModule::myFunction : Coffee is not ready yet",2);
+ \item [ERRORS]: toolbox::exportLog("ERROR: myModule::myFunction : No coffee left!!",0);
+\end{description}
+
 This function is highly complex, please do not modify it without the agreement of TOGGLE mainteners!
 
 \subsection{\texttt{toolbox::run}}
 
 
-This function will launch any command sent to it as argument (text) to the system, and will recover the exit status of the command.
-It will write the exact launched command in the output log, and any STDOUT also. All errors will be send to the error log and generally will drive to the stop of the pipeline.
+This function will launch any command sent to it as argument (text or scalar) to the system, and will recover the exit status of the command.
+It will write the exact launched command in the output log, and any STDOUT also. All errors will be send to the error log and could drive to the stop of the pipeline.
 
-To use this, respect the following nomenclature
+To use this, respect the following nomenclature:
 
 \begin{lstlisting}
-toolbox::run(``my command to be launched'');
+toolbox::run("my command to be launched");
 \end{lstlisting}
-
 
 
 As for the previous function, \texttt{toolbox::run} is an intreasic function that cannot be modified except by mainteners.
@@ -350,9 +366,10 @@ Let's come back to our example:
 
 ##SAMTOOLS SORT
 #Sort alignments by leftmost coordinates.
-sub samToolsSort{
+sub samToolsSort
+{
      ...
-     }
+}
 
 \end{lstlisting}
 
@@ -361,7 +378,7 @@ The \texttt{sub} is preceded by commentaries about the function and what it does
 \begin{lstlisting}[numbers=left]
 
 ...
-     my($bamFileIn,$optionsHachees)=@_;
+      my($bamFileIn,$bamFileOut,$optionsHachees)=@_;
          
 ...
 
@@ -372,15 +389,20 @@ input file and options are recovered through references.
 
 \begin{lstlisting}[numbers=left]
 
-     if (toolbox::sizeFile($bamFileIn)==1){ ##Check if entry file exist and is not empty
+     if (toolbox::sizeFile($bamFileIn)==1)
+     { ##Check if entry file exist and is not empty
           
           #Check if the format is correct
-          if (toolbox::checkSamOrBamFormat($bamFileIn)==0) {#The file is not a BAM/SAM file
+          if (checkFormat::checkFormatSamOrBam($bamFileIn)==0)
+          {#The file is not a BAM/SAM file
                toolbox::exportLog("ERROR: samTools::samToolsSort : The file $bamFileIn is not a SAM/BAM file\n",0);
                return 0;
           }
-          MY CORE COMMAND
-     }else{
+          
+         MY CORE COMMAND
+     }
+     else
+     {
         toolbox::exportLog("ERROR: samTools::samToolsSort : The file $bamFileIn is uncorrect\n",0);
         return 0;#File not Ok
      }
@@ -392,18 +414,20 @@ We check if the  input file exists (\texttt{toolbox::sizeFile}) and if the file 
 If any error appears (empty file, wrong format), the script is stopped and logs filled using the \texttt{toolbox::exportLog function}.
 
 \begin{lstlisting}
-          my $bamPath=toolbox::extractPath($bamFileIn);
-          my $bamFileName=toolbox::extractName($bamFileIn).".SAMTOOLSSORT";
-          my $bamFileOut = $bamPath.$bamFileName;
-          my $options="";
-          if ($optionsHachees) {
+           my $options="";
+          
+          if ($optionsHachees)
+          {
                $options=toolbox::extractOptions($optionsHachees);
           }
-          my $command=$samtools." sort ".$options." ".$bamFileIn." ".$bamFileOut;
+          
+          #The current samtools sort version requires the -T option, ie temp prefix
+          my $tempPrefix = $bamFileOut;
+          $tempPrefix =~ s/\.bam/_temp/;
+          
+          my $command=$samtools." sort ".$options." -o ".$bamFileOut." -T ".$tempPrefix." ".$bamFileIn;
           
 \end{lstlisting}
-
-The \texttt{toolbox::extractPath} function allows to pickup file name without extension (similar to \texttt{basename} bash command). Using this shorter name, we can create an output name if required.
 
 The \texttt{toolbox::extractOptions} function will create a text version of the hash containing the options for the given tool (first argument). A second optional argument can be provided to specify the separator between the option name and its value. Thus if the second argument is provided as ``='', the option output would be ``-d=1''. Either, in standard it will be ``-d 1'' (standard is space).
 
@@ -411,21 +435,59 @@ The command line can thus be created.
 
 \begin{lstlisting}
           #Execute command
-          if(toolbox::run($command)==1){
-               toolbox::exportLog("INFOS: samTools::samToolsSort : Correctly done\n",1);
+          if(toolbox::run($command)==1)
+          {
                return 1;#Command Ok
-          }else{
-                    toolbox::exportLog("ERROR: samTools::samToolsSort : Uncorrectly done\n",0);
-                    return 0;#Command not Ok
-               }
+          }
+          else
+          {
+               toolbox::exportLog("ERROR: samTools::samToolsSort : Uncorrectly done\n",0);
+               return 0;#Command not Ok
+          }
 \end{lstlisting}
 
 Once we have created the command, we can send it to \texttt{toolbox::run}, and report the output state (O, 1 or 2).
 
+\subsection{Adding a perlDoc}
+
+A \textbf{perlDoc} information has to be added at the end of the module, after the\textit{1;}:
+
+\begin{lstlisting}
+          =head1 NAME
+	  
+	   Package I<samtools> 
+
+	  =head1 SYNOPSIS
+
+	  This package contains the whole modules for the SAMtools software
+
+	  =head1 DESCRIPTION
+
+	  Package SAMtools (Li et al, 2009, http://http://www.htslib.org/ ) is a software package for working on SAM and BAM files (sorting, selection, merging...)
+
+	  =head2 Functions
+
+	  =over 4
+
+	  =item samToolsSort (Sorts in different ways a BAM file: coordinates, random, reads)
+
+	  =back
+
+	  =head1 AUTHORS
+
+	  Intellectual property belongs to IRD, CIRAD, YOUR INSTITURE and South Green developpement plateform 
+	  Written by Cecile Monat, Ayite Kougbeadjo, Marilyne Summo, Cedric Farcy, Mawusse Agbessi, Christine Tranchant, YOUR NAME and Francois Sabot
+
+	  =head1 SEE ALSO
+
+	  L<http://toggle.southgreen.fr/>		# SOUTH GREEN TOGGLE WEBSITE
+
+	  =cut
+\end{lstlisting}
+
 \subsection{TIPS}
 
 Generally, the fastest and easiest way to create new functions is to copy an existing one (closely related) and to modify it.
-
 
 
 \section{The test}
